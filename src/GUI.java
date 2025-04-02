@@ -1,6 +1,7 @@
 import java.io.*;
 
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert.*;
 
 import java.util.Scanner;
@@ -17,10 +18,11 @@ import javafx.scene.effect.Glow;
 import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.scene.input.*;
 import javafx.stage.*;
 
@@ -42,14 +44,35 @@ public class GUI extends Application{
         Menu mFile = new Menu("File");
         Menu mHelp =new Menu("Help");
 
-        VBox mainLayout=new VBox();
+        
 
-        ButtonBar bb =new ButtonBar();
+       /* ButtonBar bb =new ButtonBar();
         Button start = new Button("Start");
         Button stop = new Button("Stop");
         Button write = new Button("Write");
         bb.getButtons().addAll(start,stop,write);
-        bb.autosize();
+        bb.setStyle("-fx-alignment: center-left;");*/
+
+        HBox searcHBox = new HBox(10);
+        searcHBox.setPadding(new Insets(10));
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search...");
+        Button searchButton = new Button("Search");
+        searcHBox.getChildren().addAll(searchField, searchButton);
+
+
+
+        VBox sidePanel = new VBox(10);
+        sidePanel.setPadding(new Insets(10));
+        Button btnAdd = new Button("Add Artifact");
+        Button btnEdit = new Button("Edit Selected");
+        Button btnDelete = new Button("Delete Selected");
+        Button btnRefresh = new Button("Refresh List");
+        sidePanel.getChildren().addAll(btnAdd, btnEdit, btnDelete, btnRefresh);
+
+
+        
+
 
 
         textArea =new TextArea();
@@ -88,7 +111,13 @@ public class GUI extends Application{
         mFile.getItems().addAll(mNewFile, mOpenFile,mSave,mQuit); // add menuitems to file menu
         menu.getMenus().addAll(mFile, mHelp); // add menus to menubar
 
-        mainLayout.getChildren().addAll(menu, textArea,bb); // add menu to mainLayout
+        BorderPane mainLayout=new BorderPane();
+        mainLayout.setPadding(new Insets(10));
+        mainLayout.setTop(menu);
+        mainLayout.setLeft(sidePanel);
+        mainLayout.setBottom(searcHBox);
+
+         // add menu to mainLayout
         Scene scene = new Scene(mainLayout,500,400);
         stage.setTitle("CE216");
         stage.setScene(scene);
