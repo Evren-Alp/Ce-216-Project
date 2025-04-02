@@ -59,6 +59,8 @@ public class GUI extends Application{
         searchField.setPromptText("Search...");
         Button searchButton = new Button("Search");
         searcHBox.getChildren().addAll(searchField, searchButton);
+        searcHBox.setStyle("-fx-border-color: gray; -fx-border-width: 2 0 0 0; -fx-padding: 10;");
+
 
 
 
@@ -69,6 +71,8 @@ public class GUI extends Application{
         Button btnDelete = new Button("Delete Selected");
         Button btnRefresh = new Button("Refresh List");
         sidePanel.getChildren().addAll(btnAdd, btnEdit, btnDelete, btnRefresh);
+        sidePanel.setStyle("-fx-border-color: gray; -fx-border-width: 0 2 0 0; -fx-padding: 10;");
+
 
 
         
@@ -116,9 +120,10 @@ public class GUI extends Application{
         mainLayout.setTop(menu);
         mainLayout.setLeft(sidePanel);
         mainLayout.setBottom(searcHBox);
+        
 
          // add menu to mainLayout
-        Scene scene = new Scene(mainLayout,500,400);
+        Scene scene = new Scene(mainLayout,800,600);
         stage.setTitle("CE216");
         stage.setScene(scene);
         stage.show();
