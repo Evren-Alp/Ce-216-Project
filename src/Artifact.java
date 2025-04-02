@@ -1,18 +1,18 @@
 import java.util.List;
 
 public class Artifact {
-    private String artifactId;
-    private String name;
-    private String category;
-    private String civilization;
-    private String discoveryLocation;
-    private String composition;
-    private String discoveryDate;
-    private String currentPlace;
-    private double width, height, length;
-    private double weight;
-    private List<String> tags;
-    private List<String> imagePaths;
+    public String artifactId;
+    public String name;
+    public String category;
+    public String civilization;
+    public String discoveryLocation;
+    public String composition;
+    public String discoveryDate;
+    public String currentPlace;
+    public double width, height, length;
+    public double weight;
+    public List<String> tags;
+    public List<String> imagePaths;
 
     // Getters and Setters
     public String getArtifactId() {

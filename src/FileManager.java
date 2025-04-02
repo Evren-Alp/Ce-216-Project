@@ -67,7 +67,7 @@ class FileManager{
 
         // saving all the values
         while(matcher.find()){
-            if(matcher.group(1).toLowerCase().equals("artifactid")) { this.myArtifact.artifactID = matcher.group(2); }
+            if(matcher.group(1).toLowerCase().equals("artifactid")) { this.myArtifact.artifactId = matcher.group(2); }
             else if(matcher.group(1).toLowerCase().equals("name")) { this.myArtifact.name = matcher.group(2); }
             else if(matcher.group(1).toLowerCase().equals("category")) { this.myArtifact.category = matcher.group(2); }
             else if(matcher.group(1).toLowerCase().equals("civilization")) { this.myArtifact.civilization = matcher.group(2); }
