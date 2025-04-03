@@ -9,10 +9,28 @@ public class Artifact {
     public String composition;
     public String discoveryDate;
     public String currentPlace;
-    public double width, height, length;
-    public double weight;
+    public double weight, width, height, length;
     public List<String> tags;
     public List<String> imagePaths;
+
+    public void printArtifactData(){
+        System.out.println("---------- Artifact Data ----------");
+        System.out.println("ID: " + this.artifactId + "      Name: " + this.name + "\nCategory: " + this.category + "      Civilization: " + this.civilization);
+        System.out.println("Discovery Locaiton: " + this.discoveryLocation + "      Discovery Date: " + this.discoveryDate);
+        System.out.println("Composition: " + this.composition);
+        System.out.println("CurrentPlace: " + this.currentPlace);
+        System.out.println("Weight: " + this.weight + "    Height: " + this.height + "    Width: " + this.width + "    Length: " + this.length);
+        System.out.println("Image paths:");
+        for(String path:imagePaths){
+            System.out.println("  -" + path);
+        }
+        System.out.println("Tags:");
+        for(String tag:tags){
+            System.out.println("  -" + tag);
+        }
+    }
+
+
 
     // Getters and Setters
     public String getArtifactId() {
