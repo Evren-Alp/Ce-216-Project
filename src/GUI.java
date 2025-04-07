@@ -67,6 +67,74 @@ public class GUI extends Application{
         VBox sidePanel = new VBox(10);
         sidePanel.setPadding(new Insets(10));
         Button btnAdd = new Button("Add Artifact");
+        btnAdd.setOnAction(e -> {
+            Stage artifactStage = new Stage();
+            artifactStage.setTitle("Add Artifact");
+
+            VBox artifactLayout = new VBox(40);
+            artifactLayout.setPadding(new Insets(40));
+
+            TextField artifactName = new TextField();
+            TextField artifactID = new TextField();
+            TextField category = new TextField();
+            TextField civilization = new TextField();
+            TextField discoveryLoc = new TextField();
+            TextField composition = new TextField();
+            TextField discoveryDate = new TextField();
+            TextField currentPl = new TextField();
+            TextField weight = new TextField();
+            TextField width = new TextField();
+            TextField height = new TextField();
+            TextField length = new TextField();
+            TextField tags = new TextField();
+
+            artifactName.setPromptText("Artifact Name");
+            artifactID.setPromptText("Artifact ID");
+            category.setPromptText("Category");
+            civilization.setPromptText("Civilization");
+            discoveryLoc.setPromptText("Discovery Location");
+            composition.setPromptText("Composition");
+            discoveryDate.setPromptText("Discovery Date");
+            currentPl.setPromptText("Current Place");
+            weight.setPromptText("Weight");
+            width.setPromptText("Width");
+            height.setPromptText("Height");
+            length.setPromptText("Length");
+            tags.setPromptText("Tags");
+        
+
+            Button saveButton = new Button("Save");
+            saveButton.setOnAction(event -> {
+            String AN = artifactName.getText();
+            if (true) { //her bilgi girilsin mi yoksa sadece biri yeter mi??
+                //Artifact artf = new Artifact(AN);
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Artifact added successfully!");
+                alert.showAndWait();
+                artifactStage.close();
+            } else {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill in all fields.");
+                alert.showAndWait();
+            }
+            });
+
+            artifactLayout.setSpacing(1); 
+            artifactLayout.getChildren().addAll(
+                artifactName, artifactID, category, civilization, discoveryLoc, 
+                composition, discoveryDate, currentPl, weight, width, 
+                height, length, tags, saveButton
+            );
+
+            Scene artifactScene = new Scene(artifactLayout, 300, 600);
+            artifactStage.setScene(artifactScene);
+            artifactStage.initModality(Modality.APPLICATION_MODAL);
+            artifactStage.showAndWait();
+        });
         Button btnEdit = new Button("Edit Selected");
         Button btnDelete = new Button("Delete Selected");
         Button btnRefresh = new Button("Refresh List");

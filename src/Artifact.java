@@ -13,6 +13,11 @@ public class Artifact {
     public List<String> tags;
     public List<String> imagePaths;
 
+    public Artifact(String artifactId){
+        this.artifactId = artifactId;
+    }
+    public Artifact(){}
+
     public void printArtifactData(){
         System.out.println("---------- Artifact Data ----------");
         System.out.println("ID: " + this.artifactId + "      Name: " + this.name + "\nCategory: " + this.category + "      Civilization: " + this.civilization);
