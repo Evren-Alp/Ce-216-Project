@@ -106,8 +106,15 @@ public class GUI extends Application{
             Button saveButton = new Button("Save");
             saveButton.setOnAction(event -> {
             String AN = artifactName.getText();
-            if (true) { //her bilgi girilsin mi yoksa sadece biri yeter mi??
-                //Artifact artf = new Artifact(AN);
+            if (!AN.isEmpty()) { //her bilgi girilsin mi yoksa sadece biri yeter mi??
+                Artifact artf = new Artifact(artifactName.getText(), artifactID.getText(),
+                                         category.getText(), civilization.getText(), 
+                                    discoveryLoc.getText(), composition.getText(), 
+                                 discoveryDate.getText(), currentPl.getText(),
+                             Double.parseDouble(weight.getText()), Double.parseDouble(width.getText()),
+                        Double.parseDouble(height.getText()), Double.parseDouble(length.getText()));
+                //Add the artifact to the existing artifact list but the list does not exist yet
+                
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Success");
                 alert.setHeaderText(null);

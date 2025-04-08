@@ -126,7 +126,7 @@ class FileManager{
     }
 
 
-    public void writeToFile(String text, String fileAddress){
+    public void writeToFile(String str, String fileAddress){
         // TODO
     }
 }

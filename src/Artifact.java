@@ -13,8 +13,21 @@ public class Artifact {
     public List<String> tags;
     public List<String> imagePaths;
 
-    public Artifact(String artifactId){
+    public Artifact(String artifactId ,String name, String category, String civilization, 
+               String discoveryLocation, String composition, String discoveryDate,
+                String currentPlace, double weight, double width, double height, double length){
         this.artifactId = artifactId;
+        this.name = name;
+        this.category = category;
+        this.civilization = civilization;
+        this.discoveryLocation = discoveryLocation;
+        this.composition = composition;
+        this.discoveryDate = discoveryDate;
+        this.currentPlace = currentPlace;
+        this.weight = weight;
+        this.width = width;
+        this.height = height;
+        this.length = length;
     }
     public Artifact(){}
 
