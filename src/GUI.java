@@ -2,18 +2,23 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.application.Application;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -62,6 +67,8 @@ public class GUI extends Application {
         mHelp.getItems().addAll(mAbout);
         mFile.getItems().addAll(mNewFile, mOpenFile, mSave, mQuit);
         menu.getMenus().addAll(mFile, mHelp);
+
+        
 
         // ---------------------------
         // Create the bottom Search HBox with a border
@@ -194,6 +201,7 @@ public class GUI extends Application {
             TextField widthField = new TextField(String.valueOf(selected.getWidth()));
             TextField heightField = new TextField(String.valueOf(selected.getHeight()));
             TextField lengthField = new TextField(String.valueOf(selected.getLength()));
+            TextField tagsField = new TextField(String.join(" ", selected.getTags()));
             Button saveEditButton = new Button("Save");
             saveEditButton.setOnAction(ev -> {
                 selected.setArtifactId(artifactIDField.getText());
@@ -208,10 +216,11 @@ public class GUI extends Application {
                 selected.setWidth(Double.parseDouble(widthField.getText()));
                 selected.setHeight(Double.parseDouble(heightField.getText()));
                 selected.setLength(Double.parseDouble(lengthField.getText()));
+                selected.setTags(new ArrayList<>(List.of(tagsField.getText().split(" "))));
                 table.refresh();
                 editStage.close();
             });
-            editLayout.getChildren().addAll(artifactIDField, artifactNameField, categoryField, civilizationField, discoveryLocField, compositionField, discoveryDateField, currentPlField, weightField, widthField, heightField, lengthField, saveEditButton);
+            editLayout.getChildren().addAll(artifactIDField, artifactNameField, categoryField, civilizationField, discoveryLocField, compositionField, discoveryDateField, currentPlField, weightField, widthField, heightField, lengthField, tagsField, saveEditButton);
             Scene editScene = new Scene(editLayout, 300, 600);
             editStage.setScene(editScene);
             editStage.initModality(Modality.APPLICATION_MODAL);
@@ -269,7 +278,11 @@ public class GUI extends Application {
         mainLayout.setPadding(new Insets(10));
         mainLayout.setTop(menu);
         mainLayout.setLeft(sidePanel);
-        mainLayout.setCenter(table);  // The table is now the main center component
+        table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        ScrollPane scrollPane = new ScrollPane(table);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(false);
+        mainLayout.setCenter(scrollPane);  
         mainLayout.setBottom(searcHBox);
 
         Scene scene = new Scene(mainLayout, 800, 600);
@@ -282,34 +295,51 @@ public class GUI extends Application {
 
     // Helper method to set up the TableView columns
     private void setupArtifactTable() {
+        TableColumn<Artifact, ImageView> colImage = new TableColumn<>("Image");
+        colImage.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getImageView()));
+        colImage.setCellFactory(col -> new TableCell<Artifact, ImageView>() {
+            @Override
+            protected void updateItem(ImageView item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : item);
+                setAlignment(javafx.geometry.Pos.CENTER);
+            }
+        });
         TableColumn<Artifact, String> colId = new TableColumn<>("ID");
-        colId.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getArtifactId())
-        );
-
+        colId.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getArtifactId()));
         TableColumn<Artifact, String> colName = new TableColumn<>("Name");
-        colName.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getName())
-        );
-
+        colName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         TableColumn<Artifact, String> colCategory = new TableColumn<>("Category");
-        colCategory.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getCategory())
-        );
-
+        colCategory.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategory()));
         TableColumn<Artifact, String> colCivilization = new TableColumn<>("Civilization");
-        colCivilization.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getCivilization())
-        );
-
-        TableColumn<Artifact, String> colLocation = new TableColumn<>("Current Place");
-        colLocation.setCellValueFactory(cellData ->
-            new SimpleStringProperty(cellData.getValue().getCurrentPlace())
-        );
-
-        table.getColumns().addAll(colId, colName, colCategory, colCivilization, colLocation);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        colCivilization.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCivilization()));
+        TableColumn<Artifact, String> colDiscoveryLocation = new TableColumn<>("Discovery Location");
+        colDiscoveryLocation.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDiscoveryLocation()));
+        TableColumn<Artifact, String> colComposition = new TableColumn<>("Composition");
+        colComposition.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getComposition()));
+        TableColumn<Artifact, String> colDiscoveryDate = new TableColumn<>("Discovery Date");
+        colDiscoveryDate.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDiscoveryDate()));
+        TableColumn<Artifact, String> colCurrentPlace = new TableColumn<>("Current Place");
+        colCurrentPlace.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCurrentPlace()));
+        TableColumn<Artifact, String> colWeight = new TableColumn<>("Weight");
+        colWeight.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getWeight())));
+        TableColumn<Artifact, String> colWidth = new TableColumn<>("Width");
+        colWidth.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getWidth())));
+        TableColumn<Artifact, String> colHeight = new TableColumn<>("Height");
+        colHeight.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getHeight())));
+        TableColumn<Artifact, String> colLength = new TableColumn<>("Length");
+        colLength.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getLength())));
+        TableColumn<Artifact, String> colTags = new TableColumn<>("Tags");
+        colTags.setCellValueFactory(cellData -> {
+            ArrayList<String> tags = cellData.getValue().getTags();
+            return new SimpleStringProperty(tags == null ? "" : String.join(",", tags));
+        });
+        colDiscoveryLocation.setPrefWidth(120);
+        colDiscoveryDate.setPrefWidth(120);
+        table.getColumns().addAll(colImage, colId, colName, colCategory, colCivilization, colDiscoveryLocation, colComposition, colDiscoveryDate, colCurrentPlace, colWeight, colWidth, colHeight, colLength, colTags);
+        table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     }
+    
 
     public static void newFile(TextArea textArea){
         textArea.clear();

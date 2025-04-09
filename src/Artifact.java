@@ -1,5 +1,10 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class Artifact {
     public String artifactId;
@@ -13,10 +18,17 @@ public class Artifact {
     public double weight, width, height, length;
     public ArrayList<String> tags;
     public List<String> imagePaths;
+    public ImageView imageView;
 
+    public ImageView getImageView() {
+        return imageView;
+    }
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
     public Artifact(String artifactId ,String name, String category, String civilization, 
                String discoveryLocation, String composition, String discoveryDate,
-                String currentPlace, double weight, double width, double height, double length, ArrayList<String> tags){
+                String currentPlace, double weight, double width, double height, double length, ArrayList<String> tags) {
         this.artifactId = artifactId;
         this.name = name;
         this.category = category;
@@ -30,6 +42,21 @@ public class Artifact {
         this.height = height;
         this.length = length;
         this.tags = tags;
+        
+        FileInputStream inputstream = null;
+        try {
+            imagePaths = new ArrayList<String>();
+            imagePaths.add("Sprites/pengu.png");
+            inputstream = new FileInputStream(imagePaths.get(0)); // Assuming imagePaths is a list of file paths
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+        Image image = new Image(inputstream); 
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(50);
+        imageView.setFitHeight(50);
+        this.imageView= imageView;
     }
     public Artifact(){}
 
