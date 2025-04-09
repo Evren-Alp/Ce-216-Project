@@ -1,6 +1,8 @@
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
@@ -117,20 +119,25 @@ public class GUI extends Application {
         
             Button saveButton = new Button("Save");
             saveButton.setOnAction(event -> {
-            if (!artifactID.getText().isEmpty()||!artifactName.getText().isEmpty()||
-            !category.getText().isEmpty()||!civilization.getText().isEmpty()|| 
-       !discoveryLoc.getText().isEmpty()||composition.getText().isEmpty()|| 
-    !discoveryDate.getText().isEmpty()||!currentPl.getText().isEmpty()&!weight.getText().isEmpty()||
-    !width.getText().isEmpty()||!height.getText().isEmpty()||!length.getText().isEmpty())
-             { //her bilgi girilsin mi yoksa sadece biri yeter mi??
+            if (!artifactID.getText().isEmpty() && !artifactName.getText().isEmpty() &&
+            !category.getText().isEmpty() && !civilization.getText().isEmpty() && 
+            !discoveryLoc.getText().isEmpty() && !composition.getText().isEmpty() && 
+            !discoveryDate.getText().isEmpty() && !currentPl.getText().isEmpty() && !weight.getText().isEmpty() &&
+            !width.getText().isEmpty() && !height.getText().isEmpty() && !length.getText().isEmpty() && !tags.getText().isEmpty()) {
+                String[] temp = tags.getText().split(" ");
+                ArrayList<String> taglist = new ArrayList<>();
+                for (String tag : temp) {
+                    taglist.add(tag.trim());
+                }
                 Artifact artifact = new Artifact(artifactID.getText(), artifactName.getText(),
                                          category.getText(), civilization.getText(), 
                                     discoveryLoc.getText(), composition.getText(), 
                                  discoveryDate.getText(), currentPl.getText(),
                              Double.parseDouble(weight.getText()), Double.parseDouble(width.getText()),
-                        Double.parseDouble(height.getText()), Double.parseDouble(length.getText()));
+                        Double.parseDouble(height.getText()), Double.parseDouble(length.getText()), taglist);
                 
                 table.getItems().add(artifact);
+                ArtifactManager.artifacts.add(artifact);
                 
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Success");
