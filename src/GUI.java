@@ -115,11 +115,11 @@ public class GUI extends Application {
         
             Button saveButton = new Button("Save");
             saveButton.setOnAction(event -> {
-            if (!artifactID.getText().isEmpty()&!artifactName.getText().isEmpty()&
-            !category.getText().isEmpty()&!civilization.getText().isEmpty()& 
-       !discoveryLoc.getText().isEmpty()&composition.getText().isEmpty()& 
-    !discoveryDate.getText().isEmpty()&!currentPl.getText().isEmpty()&!weight.getText().isEmpty()&
-    !width.getText().isEmpty()&!height.getText().isEmpty()&!length.getText().isEmpty())
+            if (!artifactID.getText().isEmpty()||!artifactName.getText().isEmpty()||
+            !category.getText().isEmpty()||!civilization.getText().isEmpty()|| 
+       !discoveryLoc.getText().isEmpty()||composition.getText().isEmpty()|| 
+    !discoveryDate.getText().isEmpty()||!currentPl.getText().isEmpty()&!weight.getText().isEmpty()||
+    !width.getText().isEmpty()||!height.getText().isEmpty()||!length.getText().isEmpty())
              { //her bilgi girilsin mi yoksa sadece biri yeter mi??
                 Artifact artifact = new Artifact(artifactID.getText(), artifactName.getText(),
                                          category.getText(), civilization.getText(), 

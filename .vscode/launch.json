@@ -7,7 +7,8 @@
             "request": "launch",
             "mainClass": "GUI",
             "projectName": "Ce-216-Project_d7cdb0d5",
-            "vmArgs": "javafx-sdk-23.0.2/lib"
+            "cwd":"${workspaceFolder}",
+            "vmArgs": "--module-path /Users/sineoykuyasar/Downloads/javafx-sdk-23.0.2/lib --add-modules javafx.controls --add-modules javafx.fxml"
         },
         
         {
@@ -16,7 +17,8 @@
             "request": "launch",
             "mainClass": "GUI",
             "projectName": "Ce-216-Project",
-            "vmArgs": "javafx-sdk-23.0.2/lib"
+            "cwd":"${workspaceFolder}",
+            "vmArgs": "--module-path /Users/sineoykuyasar/Downloads/javafx-sdk-23.0.2/lib --add-modules javafx.controls --add-modules javafx.fxml"
         }
     ]
 }
