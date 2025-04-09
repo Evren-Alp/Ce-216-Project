@@ -127,7 +127,8 @@ public class GUI extends Application {
                                  discoveryDate.getText(), currentPl.getText(),
                              Double.parseDouble(weight.getText()), Double.parseDouble(width.getText()),
                         Double.parseDouble(height.getText()), Double.parseDouble(length.getText()));
-                //Add the artifact to the existing artifact list but the list does not exist yet
+                
+                table.getItems().add(artifact);
                 
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Success");
@@ -199,11 +200,7 @@ public class GUI extends Application {
                 ex.printStackTrace();
             }
         });
-        mOpenFile.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
-        mAbout.setOnAction(e -> aboutText());
-        mHelp.getItems().addAll(mAbout);
-        mFile.getItems().addAll(mNewFile, mOpenFile, mSave, mQuit);
-        menu.getMenus().addAll(mFile, mHelp);
+        
 
         // ---------------------------
         // Build the main layout using a BorderPane
