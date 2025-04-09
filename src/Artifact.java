@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Artifact {
@@ -10,12 +11,12 @@ public class Artifact {
     public String discoveryDate;
     public String currentPlace;
     public double weight, width, height, length;
-    public List<String> tags;
+    public ArrayList<String> tags;
     public List<String> imagePaths;
 
     public Artifact(String artifactId ,String name, String category, String civilization, 
                String discoveryLocation, String composition, String discoveryDate,
-                String currentPlace, double weight, double width, double height, double length){
+                String currentPlace, double weight, double width, double height, double length, ArrayList<String> tags){
         this.artifactId = artifactId;
         this.name = name;
         this.category = category;
@@ -28,6 +29,7 @@ public class Artifact {
         this.width = width;
         this.height = height;
         this.length = length;
+        this.tags = tags;
     }
     public Artifact(){}
 
@@ -147,11 +149,11 @@ public class Artifact {
         this.weight = weight;
     }
 
-    public List<String> getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(ArrayList<String> tags) {
         this.tags = tags;
     }
 
