@@ -68,6 +68,14 @@ public class GUI extends Application {
         mFile.getItems().addAll(mNewFile, mOpenFile, mSave, mQuit);
         menu.getMenus().addAll(mFile, mHelp);
 
+
+        FileInputStream inputstream = new FileInputStream("D:\\Downloads\\f697df73094115.5bfe313fb3773.gif"); 
+        Image image = new Image(inputstream); 
+        ImageView ablalar = new ImageView(image);
+        
+        ablalar.setFitHeight(350);
+        ablalar.setFitWidth(200);
+
         
 
         // ---------------------------
@@ -233,7 +241,7 @@ public class GUI extends Application {
             // Refresh the table data if needed
             table.refresh();
         });
-        sidePanel.getChildren().addAll(btnAdd, btnEdit, btnDelete, btnRefresh);
+        sidePanel.getChildren().addAll(btnAdd, btnEdit, btnDelete, btnRefresh, ablalar);    
         sidePanel.setStyle("-fx-border-color: gray; -fx-border-width: 0 2 0 0; -fx-padding: 10;");
 
         // ---------------------------
@@ -286,7 +294,9 @@ public class GUI extends Application {
         mainLayout.setBottom(searcHBox);
 
         Scene scene = new Scene(mainLayout, 800, 600);
-        stage.setTitle("CE216");
+        stage.setTitle("Artifact Manager");
+        
+
         stage.setScene(scene);
         stage.show();
     }
