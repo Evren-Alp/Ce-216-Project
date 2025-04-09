@@ -111,52 +111,36 @@ public class GUI extends Application {
             length.setPromptText("Length");
             TextField tags = new TextField();
             tags.setPromptText("Tags");
-            
+        
             Button saveButton = new Button("Save");
             saveButton.setOnAction(event -> {
-                // For simplicity, we check only Artifact Name here
-                if (!artifactName.getText().isEmpty()) {
-                    try {
-                        // Create a new Artifact using a constructor with your parameters.
-                        // Make sure the Artifact class has an appropriate constructor.
-                        Artifact artf = new Artifact(
-                            artifactName.getText(), 
-                            artifactID.getText(),
-                            category.getText(), 
-                            civilization.getText(), 
-                            discoveryLoc.getText(), 
-                            composition.getText(), 
-                            discoveryDate.getText(), 
-                            currentPl.getText(),
-                            Double.parseDouble(weight.getText()), 
-                            Double.parseDouble(width.getText()),
-                            Double.parseDouble(height.getText()), 
-                            Double.parseDouble(length.getText())
-                            // Tags can be processed as needed.
-                        );
-                        // Add the new artifact to the table
-                        table.getItems().add(artf);
-                        
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Success");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Artifact added successfully!");
-                        alert.showAndWait();
-                        artifactStage.close();
-                    } catch (NumberFormatException ex) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Please enter valid numeric values for weight, width, height, and length.");
-                        alert.showAndWait();
-                    }
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Please fill in all fields.");
-                    alert.showAndWait();
-                }
+            if (!artifactID.getText().isEmpty()&!artifactName.getText().isEmpty()&
+            !category.getText().isEmpty()&!civilization.getText().isEmpty()& 
+       !discoveryLoc.getText().isEmpty()&composition.getText().isEmpty()& 
+    !discoveryDate.getText().isEmpty()&!currentPl.getText().isEmpty()&!weight.getText().isEmpty()&
+    !width.getText().isEmpty()&!height.getText().isEmpty()&!length.getText().isEmpty())
+             { //her bilgi girilsin mi yoksa sadece biri yeter mi??
+                Artifact artifact = new Artifact(artifactID.getText(), artifactName.getText(),
+                                         category.getText(), civilization.getText(), 
+                                    discoveryLoc.getText(), composition.getText(), 
+                                 discoveryDate.getText(), currentPl.getText(),
+                             Double.parseDouble(weight.getText()), Double.parseDouble(width.getText()),
+                        Double.parseDouble(height.getText()), Double.parseDouble(length.getText()));
+                //Add the artifact to the existing artifact list but the list does not exist yet
+                
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Artifact added successfully!");
+                alert.showAndWait();
+                artifactStage.close();
+            } else {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill in all fields.");
+                alert.showAndWait();
+            }
             });
             
             artifactLayout.getChildren().addAll(
