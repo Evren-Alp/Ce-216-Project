@@ -6,17 +6,18 @@
             "name": "GUI",
             "request": "launch",
             "mainClass": "GUI",
-            "projectName": "Ce-216-Project_d7cdb0d5",
-            "vmArgs": "javafx-sdk-23.0.2/lib"
+            "projectName": "Ce-216-Project_70f3a0f9",
+            "cwd": "${workspaceFolder}",
+            "vmArgs": "--module-path ./javafx-sdk-23.0.2/lib --add-modules javafx.controls,javafx.fxml"
         },
+        
         {
             "type": "java",
-            "name": "GUI",
+            "name": "Launch App",
             "request": "launch",
-            "mainClass": "GUI",
-            "projectName": "Ce-216-Project",
-            "vmArgs": "javafx-sdk-23.0.2/lib"
+            "mainClass": "JavaFXExample",
+            "cwd": "${workspaceFolder}",
+            "vmArgs": "--module-path ./javafx-sdk-23.0.2/lib --add-modules javafx.controls,javafx.fxml"
         }
     ]
-        
 }
