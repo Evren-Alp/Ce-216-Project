@@ -112,6 +112,8 @@ public class GUI extends Application {
             length.setPromptText("Length");
             TextField tags = new TextField();
             tags.setPromptText("Tags");
+
+            
         
             Button saveButton = new Button("Save");
             saveButton.setOnAction(event -> {
@@ -158,6 +160,57 @@ public class GUI extends Application {
         });
         
         Button btnEdit = new Button("Edit Selected");
+
+        btnEdit.setOnAction(e -> {
+            Artifact selected = table.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("No Selection");
+                alert.setHeaderText(null);
+                alert.setContentText("Select an artifact to edit.");
+                alert.showAndWait();
+                return;
+            }
+            Stage editStage = new Stage();
+            editStage.setTitle("Edit Artifact");
+            VBox editLayout = new VBox(10);
+            editLayout.setPadding(new Insets(10));
+            TextField artifactIDField = new TextField(selected.getArtifactId());
+            TextField artifactNameField = new TextField(selected.getName());
+            TextField categoryField = new TextField(selected.getCategory());
+            TextField civilizationField = new TextField(selected.getCivilization());
+            TextField discoveryLocField = new TextField(selected.getDiscoveryLocation());
+            TextField compositionField = new TextField(selected.getComposition());
+            TextField discoveryDateField = new TextField(selected.getDiscoveryDate());
+            TextField currentPlField = new TextField(selected.getCurrentPlace());
+            TextField weightField = new TextField(String.valueOf(selected.getWeight()));
+            TextField widthField = new TextField(String.valueOf(selected.getWidth()));
+            TextField heightField = new TextField(String.valueOf(selected.getHeight()));
+            TextField lengthField = new TextField(String.valueOf(selected.getLength()));
+            Button saveEditButton = new Button("Save");
+            saveEditButton.setOnAction(ev -> {
+                selected.setArtifactId(artifactIDField.getText());
+                selected.setName(artifactNameField.getText());
+                selected.setCategory(categoryField.getText());
+                selected.setCivilization(civilizationField.getText());
+                selected.setDiscoveryLocation(discoveryLocField.getText());
+                selected.setComposition(compositionField.getText());
+                selected.setDiscoveryDate(discoveryDateField.getText());
+                selected.setCurrentPlace(currentPlField.getText());
+                selected.setWeight(Double.parseDouble(weightField.getText()));
+                selected.setWidth(Double.parseDouble(widthField.getText()));
+                selected.setHeight(Double.parseDouble(heightField.getText()));
+                selected.setLength(Double.parseDouble(lengthField.getText()));
+                table.refresh();
+                editStage.close();
+            });
+            editLayout.getChildren().addAll(artifactIDField, artifactNameField, categoryField, civilizationField, discoveryLocField, compositionField, discoveryDateField, currentPlField, weightField, widthField, heightField, lengthField, saveEditButton);
+            Scene editScene = new Scene(editLayout, 300, 600);
+            editStage.setScene(editScene);
+            editStage.initModality(Modality.APPLICATION_MODAL);
+            editStage.showAndWait();
+        });
+
         Button btnDelete = new Button("Delete Selected");
         Button btnRefresh = new Button("Refresh List");
         btnRefresh.setOnAction(e -> {
