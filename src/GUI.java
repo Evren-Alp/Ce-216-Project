@@ -102,12 +102,15 @@ public class GUI extends Application{
             length.setPromptText("Length");
             tags.setPromptText("Tags");
         
-
             Button saveButton = new Button("Save");
             saveButton.setOnAction(event -> {
-            String AN = artifactName.getText();
-            if (!AN.isEmpty()) { //her bilgi girilsin mi yoksa sadece biri yeter mi??
-                Artifact artf = new Artifact(artifactName.getText(), artifactID.getText(),
+            if (!artifactID.getText().isEmpty()&!artifactName.getText().isEmpty()&
+            !category.getText().isEmpty()&!civilization.getText().isEmpty()& 
+       !discoveryLoc.getText().isEmpty()&composition.getText().isEmpty()& 
+    !discoveryDate.getText().isEmpty()&!currentPl.getText().isEmpty()&!weight.getText().isEmpty()&
+    !width.getText().isEmpty()&!height.getText().isEmpty()&!length.getText().isEmpty())
+             { //her bilgi girilsin mi yoksa sadece biri yeter mi??
+                Artifact artifact = new Artifact(artifactID.getText(), artifactName.getText(),
                                          category.getText(), civilization.getText(), 
                                     discoveryLoc.getText(), composition.getText(), 
                                  discoveryDate.getText(), currentPl.getText(),

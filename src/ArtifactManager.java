@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArtifactManager {
-    private List<Artifact> artifacts= new ArrayList<>();
+    public List<Artifact> artifacts= new ArrayList<>();
 
     public void loadArtifactsFromJSON(String filePath) throws IOException {
     }
