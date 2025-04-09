@@ -69,7 +69,7 @@ public class GUI extends Application {
         menu.getMenus().addAll(mFile, mHelp);
 
 
-        FileInputStream inputstream = new FileInputStream("D:\\Downloads\\f697df73094115.5bfe313fb3773.gif"); 
+        FileInputStream inputstream = new FileInputStream("Sprites/clap.gif"); 
         Image image = new Image(inputstream); 
         ImageView ablalar = new ImageView(image);
         
