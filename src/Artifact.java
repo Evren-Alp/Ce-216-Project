@@ -3,6 +3,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -28,7 +30,7 @@ public class Artifact {
     }
     public Artifact(String artifactId ,String name, String category, String civilization, 
                String discoveryLocation, String composition, String discoveryDate,
-                String currentPlace, double weight, double width, double height, double length, ArrayList<String> tags) {
+                String currentPlace, double weight, double width, double height, double length, ArrayList<String> tags, List<String> imagePaths) {
         this.artifactId = artifactId;
         this.name = name;
         this.category = category;
@@ -42,14 +44,17 @@ public class Artifact {
         this.height = height;
         this.length = length;
         this.tags = tags;
+        this.imagePaths = imagePaths;
         
         FileInputStream inputstream = null;
         try {
-            imagePaths = new ArrayList<String>();
-            imagePaths.add("Sprites/pengu.png");
             inputstream = new FileInputStream(imagePaths.get(0)); // Assuming imagePaths is a list of file paths
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Image file not found. Please check the path.");
+            alert.showAndWait();
             e.printStackTrace();
         } 
         Image image = new Image(inputstream); 
@@ -61,7 +66,7 @@ public class Artifact {
     public Artifact(){}
 
     public void printArtifactData(){
-        System.out.println("---------- Artifact Data ----------");
+        System.out.println("---------------- Artifact Data ----------------");
         System.out.println("ID: " + this.artifactId + "      Name: " + this.name + "\nCategory: " + this.category + "      Civilization: " + this.civilization);
         System.out.println("Discovery Locaiton: " + this.discoveryLocation + "      Discovery Date: " + this.discoveryDate);
         System.out.println("Composition: " + this.composition);

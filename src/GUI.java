@@ -129,6 +129,8 @@ public class GUI extends Application {
             length.setPromptText("Length");
             TextField tags = new TextField();
             tags.setPromptText("Tags");
+            TextField imagePaths = new TextField();
+            imagePaths.setPromptText("Image paths separated by \",\"");
 
             
         
@@ -138,18 +140,22 @@ public class GUI extends Application {
             !category.getText().isEmpty() && !civilization.getText().isEmpty() && 
             !discoveryLoc.getText().isEmpty() && !composition.getText().isEmpty() && 
             !discoveryDate.getText().isEmpty() && !currentPl.getText().isEmpty() && !weight.getText().isEmpty() &&
-            !width.getText().isEmpty() && !height.getText().isEmpty() && !length.getText().isEmpty() && !tags.getText().isEmpty()) {
+            !width.getText().isEmpty() && !height.getText().isEmpty() && !length.getText().isEmpty() && !tags.getText().isEmpty() && !imagePaths.getText().isEmpty()) {
                 String[] temp = tags.getText().split(" ");
                 ArrayList<String> taglist = new ArrayList<>();
                 for (String tag : temp) {
                     taglist.add(tag.trim());
+                }
+                List<String> imagePathsList = new ArrayList<>();
+                for(String path : imagePaths.getText().split(",")) {
+                    imagePathsList.add(path.trim());
                 }
                 Artifact artifact = new Artifact(artifactID.getText(), artifactName.getText(),
                                          category.getText(), civilization.getText(), 
                                     discoveryLoc.getText(), composition.getText(), 
                                  discoveryDate.getText(), currentPl.getText(),
                              Double.parseDouble(weight.getText()), Double.parseDouble(width.getText()),
-                        Double.parseDouble(height.getText()), Double.parseDouble(length.getText()), taglist);
+                        Double.parseDouble(height.getText()), Double.parseDouble(length.getText()), taglist, imagePathsList);
                 
                 table.getItems().add(artifact);
                 ArtifactManager.artifacts.add(artifact);
@@ -172,7 +178,7 @@ public class GUI extends Application {
             artifactLayout.getChildren().addAll(
                 artifactName, artifactID, category, civilization, discoveryLoc,
                 composition, discoveryDate, currentPl, weight, width,
-                height, length, tags, saveButton
+                height, length, tags, imagePaths, saveButton
             );
             
             Scene artifactScene = new Scene(artifactLayout, 300, 600);
