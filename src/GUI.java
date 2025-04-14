@@ -158,7 +158,7 @@ public class GUI extends Application {
                         Double.parseDouble(height.getText()), Double.parseDouble(length.getText()), taglist, imagePathsList);
                 
                 table.getItems().add(artifact);
-                ArtifactManager.artifacts.add(artifact);
+                ArtifactManager.addArtifact(artifact);
                 
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Success");
