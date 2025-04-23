@@ -25,7 +25,7 @@ class FileManager{
 
         // checking if the address is given or if the format is valid or not
         if(this.text.equals("") && this.fileAddress.equals("") || !this.fileAddress.toUpperCase().endsWith(".JSON")){
-            System.out.println("Wrong file address. Address should end with \".json\".");
+            System.out.println("[ERROR] Wrong file address. Address should end with \".json\".");
         }
         
 
@@ -40,25 +40,6 @@ class FileManager{
             if(DEBUGGING) System.out.println("[ERROR] File not found.");
         }
 
-        // while(this.text.equals("")){
-        //     Scanner sc = new Scanner(System.in);
-        //     while(this.fileAddress.equals("") || !this.fileAddress.toUpperCase().endsWith(".JSON")){
-        //         System.out.println("Wrong file address. Address should end with \".json\". Try again: ");
-        //         this.fileAddress = sc.nextLine();
-        //     }
-        //     sc.close();
-
-        //     try{
-        //         this.file = new File(this.fileAddress);
-        //         Scanner reader = new Scanner(this.file);
-        //         while (reader.hasNextLine()) {
-        //             this.text += reader.nextLine() + "\n";
-        //         }
-        //         reader.close();
-        //     }catch(FileNotFoundException e){
-        //         if(DEBUGGING) System.out.println("[ERROR] File not found.");
-        //     }
-        // }
     }
 
     public void readFile(){
@@ -124,9 +105,9 @@ class FileManager{
     }
 
 
-    public void writeToFile(String text, String fileAddress){
+    public void writeToFile(String text, String fileAddress, boolean append){
         try {
-            FileWriter myWriter = new FileWriter(fileAddress);
+            FileWriter myWriter = new FileWriter(fileAddress, append);
             myWriter.write(text);
             myWriter.close();
             if(DEBUGGING) System.out.println("Successfully wrote to the file.");
@@ -135,4 +116,5 @@ class FileManager{
             e.printStackTrace();
         }
     }
+
 }
