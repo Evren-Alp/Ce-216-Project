@@ -24,53 +24,51 @@ class FileManager{
         this.fileAddress = fileAddress;
 
         // checking if the address is given or if the format is valid or not
-        while(this.text.equals("")){
-            Scanner sc = new Scanner(System.in);
-            while(this.fileAddress.equals("") || !this.fileAddress.toUpperCase().endsWith(".JSON")){
-                System.out.println("Wrong file address. Address should end with \".json\". Try again: ");
-                this.fileAddress = sc.nextLine();
-            }
-            sc.close();
-
-            try{
-                this.file = new File(this.fileAddress);
-                Scanner reader = new Scanner(this.file);
-                while (reader.hasNextLine()) {
-                    this.text += reader.nextLine() + "\n";
-                }
-                reader.close();
-            }catch(FileNotFoundException e){
-                if(DEBUGGING) System.out.println("[ERROR] File not found.");
-            }
+        if(this.text.equals("") && this.fileAddress.equals("") || !this.fileAddress.toUpperCase().endsWith(".JSON")){
+            System.out.println("Wrong file address. Address should end with \".json\".");
         }
         
 
-        // if it's reading then call the "readFile" method.
-        if(reads){
-            readFile();
+        try{
+            this.file = new File(this.fileAddress);
+            Scanner reader = new Scanner(this.file);
+            while (reader.hasNextLine()) {
+                this.text += reader.nextLine() + "\n";
+            }
+            reader.close();
+        }catch(FileNotFoundException e){
+            if(DEBUGGING) System.out.println("[ERROR] File not found.");
         }
-        // if it's writing, then the user has to call the "writeToFile" method
-        // MANUALLY and give the context to the method.
+
+        // while(this.text.equals("")){
+        //     Scanner sc = new Scanner(System.in);
+        //     while(this.fileAddress.equals("") || !this.fileAddress.toUpperCase().endsWith(".JSON")){
+        //         System.out.println("Wrong file address. Address should end with \".json\". Try again: ");
+        //         this.fileAddress = sc.nextLine();
+        //     }
+        //     sc.close();
+
+        //     try{
+        //         this.file = new File(this.fileAddress);
+        //         Scanner reader = new Scanner(this.file);
+        //         while (reader.hasNextLine()) {
+        //             this.text += reader.nextLine() + "\n";
+        //         }
+        //         reader.close();
+        //     }catch(FileNotFoundException e){
+        //         if(DEBUGGING) System.out.println("[ERROR] File not found.");
+        //     }
+        // }
     }
 
-    public FileManager(boolean reads){
-        this("", reads);
-        
-    }
-
-    void readFile(){
-        
-
+    public void readFile(){
 
         Pattern pattern1 = Pattern.compile("\"(\\w+)\":\\s*(?:\"([^\"]+)\"|(\\{[^}]+\\})|(\\[.*?\\])|([\\d.]+))");
         Matcher matcher = pattern1.matcher(this.text);
 
-
         String dimensions = "";
         String tags = "";
         String imagePaths = "";
-
-
 
         // saving all the values
         while(matcher.find()){
@@ -117,8 +115,6 @@ class FileManager{
 
         
         // if(myArtifact.artifactID.equals("")){ if(DEBUGGING) System.out.println("Artifact ID not given."); myArtifact.artifactID = "NULL"; }
-
-
 
 
     }

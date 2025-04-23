@@ -133,7 +133,6 @@ public class GUI extends Application {
             imagePaths.setPromptText("Image paths separated by \",\"");
 
             
-        
             Button saveButton = new Button("Save");
             saveButton.setOnAction(event -> {
             if (!artifactID.getText().isEmpty() && !artifactName.getText().isEmpty() &&
@@ -370,13 +369,15 @@ public class GUI extends Application {
     }
 
     private void saveFile(Stage stage ,TextArea textArea) throws IOException {
-         FileChooser fc = new FileChooser();
-         fc.setTitle("Select file to save!");
-         File f = fc.showSaveDialog(stage);
-         Files.writeString(f.toPath(), textArea.getText(), StandardOpenOption.CREATE);
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Select file to save!");
+        File f = fc.showSaveDialog(stage);
+        // ArtifactManager artMan = new ArtifactManager();
+        // artMan.exportSelectedArtifactsToJSON(textArea, f.toPath());
+        Files.writeString(f.toPath(), textArea.getText(), StandardOpenOption.CREATE);
     }
-    
-    private void openFile(Stage stage,TextArea textArea) throws IOException {
+
+    private void openFile(Stage stage, TextArea textArea) throws IOException {
         FileChooser fc = new FileChooser();
         fc.setTitle("Select file to open!");
         File f = fc.showOpenDialog(stage);
