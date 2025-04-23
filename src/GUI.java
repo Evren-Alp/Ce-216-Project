@@ -101,8 +101,15 @@ public class GUI extends Application {
                 // Compare artifact properties with the search query (case-insensitive)
                 String lowerCaseFilter = newValue.toLowerCase();
         
-                if (artifact.getArtifactId().toLowerCase().contains(lowerCaseFilter)) {
-                    return true; // Matches Artifact ID
+                if (artifact.getArtifactId().toLowerCase().contains(lowerCaseFilter) ||
+                    artifact.getName().toLowerCase().contains(lowerCaseFilter) || 
+                    artifact.getCategory().toLowerCase().contains(lowerCaseFilter) ||
+                    artifact.getCivilization().toLowerCase().contains(lowerCaseFilter) || 
+                    artifact.getComposition().toLowerCase().contains(lowerCaseFilter) ||
+                    artifact.getCurrentPlace().toLowerCase().contains(lowerCaseFilter) ||
+                    artifact.getDiscoveryDate().toLowerCase().contains(lowerCaseFilter) ||
+                    artifact.getDiscoveryLocation().toLowerCase().contains(lowerCaseFilter)){
+                    return true; 
                 }
                 return false;
             });
@@ -115,11 +122,20 @@ public class GUI extends Application {
                     return true;
                 }           
 
-                String lowerCaseFilter = newValue.toLowerCase();
-                if(artifact.getTags() != null && artifact.getTags().stream()
-                    .anyMatch(tag -> tag.toLowerCase().contains(lowerCaseFilter))) {
-                    return true;
-                    } 
+                String[] lowerCaseFilter = newValue.toLowerCase().split(" ");
+                if(artifact.getTags() != null){
+                    ArrayList<String> artifactTags = new ArrayList<>();
+                    for(int i = 0; i<artifact.getTags().size(); i++){
+                        artifactTags.add(artifact.getTags().get(i).toLowerCase());
+                    }
+                    
+                    boolean contains = false;
+                    for(String filterTag : lowerCaseFilter){
+                        if(artifactTags.contains(filterTag)) contains = true;
+                        else contains = false;
+                    }
+                    return contains;
+                }
                     return false;
             });
         });
@@ -305,7 +321,39 @@ public class GUI extends Application {
             // Refresh the table data if needed
             table.refresh();
         });
-        sidePanel.getChildren().addAll(btnAdd, btnEdit, btnDelete, btnRefresh, ablalar);    
+        Button importJson = new Button("Import from JSON");
+        importJson.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select JSON File");
+            fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("JSON Files", "*.json")
+            );
+        
+            // Show the file chooser dialog
+            File selectedFile = fileChooser.showOpenDialog(stage);
+        
+            if (selectedFile != null) {
+                try {
+                    // Read the JSON file 
+                    String jsonContent = Files.readString(selectedFile.toPath());
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("The program cannot import yet.");
+                    alert.showAndWait();
+        
+                    // Parse the JSON and update the artifactList here
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("File Read Error");
+                    alert.setContentText("Could not read the selected JSON file.");
+                    alert.showAndWait();
+                }
+            }
+        });
+        sidePanel.getChildren().addAll(btnAdd, btnEdit, btnDelete, importJson, btnRefresh, ablalar);    
         sidePanel.setStyle("-fx-border-color: gray; -fx-border-width: 0 2 0 0; -fx-padding: 10;");
 
         // ---------------------------
@@ -420,11 +468,40 @@ public class GUI extends Application {
     }
 
     private static void aboutText(){
-        Alert about = new Alert(Alert.AlertType.INFORMATION);
-        about.setHeaderText("About");
-        about.setTitle("About");
-        about.setContentText("Eger bu yaziyi goruyorsan ne yaptigini bilmedigin icin helpe tiklamissindir. Merak etme, ben de ne yaptigimi bilmiyorum");
-        about.showAndWait();
+    Stage helpStage = new Stage();
+    helpStage.setTitle("Help");
+
+    // Create the help content
+    VBox helpLayout = new VBox(10);
+    helpLayout.setPadding(new Insets(10));
+
+    Label helpLabel = new Label("Help Page");
+    helpLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+    TextArea helpContent = new TextArea();
+    helpContent.setPrefHeight(250); // Set preferred height
+    helpContent.setPrefWidth(350);  // Set preferred width
+    helpContent.setEditable(false);
+    helpContent.setWrapText(true);
+    helpContent.setText(
+        "Welcome to the Artifact Manager Help Page.\n\n" +
+        "1. To add an artifact, click the 'Add Artifact' button on the left panel.\n" +
+        "2. To edit an artifact, select it from the table and click 'Edit Selected'.\n" +
+        "3. To delete an artifact, select it from the table and click 'Delete Selected'.\n" +
+        "4. Use the 'Search' field to search for artifacts by name, ID, or other properties.\n" +
+        "5. Use the 'Filter by tag' field to filter artifacts by tags. Use space between tags if you want to search by multiple tags.\n" +
+        "6. 'Import from JSON' doesn't work yet. You can select your file but it won't add the artifacts to the table. \n" 
+    );
+
+    Button closeButton = new Button("Close");
+    closeButton.setOnAction(e -> helpStage.close());
+
+    helpLayout.getChildren().addAll(helpLabel, helpContent, closeButton);
+
+    Scene helpScene = new Scene(helpLayout, 400, 400);
+    helpStage.setScene(helpScene);
+    helpStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with other windows
+    helpStage.showAndWait();
     }
 
     private void saveFile(Stage stage ,TextArea textArea) throws IOException {
