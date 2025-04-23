@@ -12,7 +12,7 @@ public class ArtifactManager {
     }
 
     public static void addArtifact(Artifact artifact) {
-        String filepath = "Artifact_Files\\Artifacts.json";
+        String filepath = "Artifact_Files/Artifacts.json";
         artifacts.add(artifact);
         List<Artifact> newArtifact = new ArrayList<Artifact>();
         newArtifact.add(artifact);
@@ -69,7 +69,7 @@ public class ArtifactManager {
             for(int j=0; j<selectedArtifacts.get(i).getImagePaths().size(); j++){
                 content=content.concat("\""+selectedArtifacts.get(i).getImagePaths().get(j)+"\", ");
             }
-            content=content.substring(0, content.length()-1);
+            content=content.substring(0, content.length()-2);
             content=content.concat("]\n}\n"); 
         }
         System.out.println("content: " + content);
