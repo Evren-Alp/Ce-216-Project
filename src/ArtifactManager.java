@@ -23,10 +23,10 @@ public class ArtifactManager {
         
     }
 
-    public void deleteArtifact(String artifactId) {
+    public static void deleteArtifact(String artifactId) {
     }
 
-    public List<Artifact> searchArtifacts(String query) {
+    public static List<Artifact> searchArtifacts(String query) {
         return artifacts;
     }
 
