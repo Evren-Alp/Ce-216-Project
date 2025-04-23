@@ -98,7 +98,7 @@ class FileManager{
         }
 
         // separating tags and saving them in an arraylist
-        Pattern pathsSeparator = Pattern.compile("\"([A-z0-9\\/\\\\_.]*)\"");
+        Pattern pathsSeparator = Pattern.compile("\"([A-z0-9\\/.:]*)\"*");
         Matcher pathsMatcher = pathsSeparator.matcher(imagePaths);
         while(pathsMatcher.find()){
             if(DEBUGGING) System.out.println("[OK] found an image path");
@@ -106,7 +106,7 @@ class FileManager{
         }
 
         // separating image paths and saving them in an arraylist
-        Pattern tagsSeparator = Pattern.compile("\"([A-z0-9\\/\\\\_.]*)\"");
+        Pattern tagsSeparator = Pattern.compile("\"([A-z0-9\\/.:]*)\"*");
         Matcher tagsMatcher = tagsSeparator.matcher(tags);
         while(tagsMatcher.find()){
             if(DEBUGGING) System.out.println("[OK] found a tag");
