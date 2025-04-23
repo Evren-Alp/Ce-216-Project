@@ -104,10 +104,26 @@ public class GUI extends Application {
                 if (artifact.getArtifactId().toLowerCase().contains(lowerCaseFilter)) {
                     return true; // Matches Artifact ID
                 }
-                return false; // No match
+                return false;
             });
         });
-        searcHBox.getChildren().addAll(searchField);
+        TextField filterField = new TextField();
+        filterField.setPromptText("Filter by tag...");
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredList.setPredicate(artifact -> {     
+                if(newValue == null || newValue.isEmpty()){
+                    return true;
+                }           
+
+                String lowerCaseFilter = newValue.toLowerCase();
+                if(artifact.getTags() != null && artifact.getTags().stream()
+                    .anyMatch(tag -> tag.toLowerCase().contains(lowerCaseFilter))) {
+                    return true;
+                    } 
+                    return false;
+            });
+        });
+        searcHBox.getChildren().addAll(searchField, filterField);
         searcHBox.setStyle("-fx-border-color: gray; -fx-border-width: 2 0 0 0; -fx-padding: 10;");
 
         // ---------------------------
