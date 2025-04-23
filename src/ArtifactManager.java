@@ -12,7 +12,7 @@ public class ArtifactManager {
     }
 
     public static void addArtifact(Artifact artifact) {
-        String filepath = "Artifact_Files/Artifacts.json";
+        String filepath = "Artifacts.json";
         artifacts.add(artifact);
         List<Artifact> newArtifact = new ArrayList<Artifact>();
         newArtifact.add(artifact);
