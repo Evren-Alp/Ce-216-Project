@@ -86,6 +86,10 @@ public class GUI extends Application {
         TextField searchField = new TextField();
         searchField.setPromptText("Search...");
         Button searchButton = new Button("Search");
+        searchButton.setOnAction(e-> {
+            String query = searchField.getText().toLowerCase();
+            ArtifactManager.searchArtifacts(query);
+        });
         searcHBox.getChildren().addAll(searchField, searchButton);
         searcHBox.setStyle("-fx-border-color: gray; -fx-border-width: 2 0 0 0; -fx-padding: 10;");
 
@@ -241,6 +245,28 @@ public class GUI extends Application {
         });
 
         Button btnDelete = new Button("Delete Selected");
+        btnDelete.setOnAction(e -> {
+            Artifact selected = table.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("No Selection");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select an artifact to delete.");
+                alert.showAndWait();
+                return;
+            }
+        
+            // Confirm deletion
+            Alert confirmation = new Alert(AlertType.CONFIRMATION);
+            confirmation.setTitle("Confirm Deletion");
+            confirmation.setHeaderText(null);
+            confirmation.setContentText("Are you sure you want to delete the selected artifact?");
+            if (confirmation.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                String oldArtifactID = selected.getArtifactId();
+                table.getItems().remove(selected); // Remove from TableView
+                ArtifactManager.deleteArtifact(oldArtifactID); // Remove from the data source
+            }
+        });
         Button btnRefresh = new Button("Refresh List");
         btnRefresh.setOnAction(e -> {
             // Refresh the table data if needed
