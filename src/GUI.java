@@ -72,12 +72,7 @@ public class GUI extends Application {
         menu.getMenus().addAll(mFile, mHelp);
 
 
-        FileInputStream inputstream = new FileInputStream("Sprites/clap.gif"); 
-        Image image = new Image(inputstream); 
-        ImageView ablalar = new ImageView(image);
-        
-        ablalar.setFitHeight(350);
-        ablalar.setFitWidth(200);
+       
 
         
 
@@ -353,7 +348,7 @@ public class GUI extends Application {
                 }
             }
         });
-        sidePanel.getChildren().addAll(btnAdd, btnEdit, btnDelete, importJson, btnRefresh, ablalar);    
+        sidePanel.getChildren().addAll(btnAdd, btnEdit, btnDelete, importJson, btnRefresh);    
         sidePanel.setStyle("-fx-border-color: gray; -fx-border-width: 0 2 0 0; -fx-padding: 10;");
 
         // ---------------------------
