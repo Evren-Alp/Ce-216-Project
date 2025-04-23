@@ -42,14 +42,14 @@ public class ArtifactManager {
         String content ="";
         for(int i = 0; i<selectedArtifacts.size(); i++){
             content=content.concat("{\n");
-            content=content.concat("    \"Artifact ID\":" + "\"" +selectedArtifacts.get(i).getArtifactId()+ "\",\n" );
-            content=content.concat("    \"Artifact Name\":" + "\"" +selectedArtifacts.get(i).getName()+ "\",\n" ); 
+            content=content.concat("    \"ArtifactId\":" + "\"" +selectedArtifacts.get(i).getArtifactId()+ "\",\n" );
+            content=content.concat("    \"Name\":" + "\"" +selectedArtifacts.get(i).getName()+ "\",\n" ); 
             content=content.concat("    \"Category\":" + "\"" +selectedArtifacts.get(i).getCategory()+ "\",\n" );
             content=content.concat("    \"Civilization\":" + "\"" +selectedArtifacts.get(i).getCivilization()+ "\",\n" );
-            content=content.concat("    \"Discovery Location\":" + "\"" +selectedArtifacts.get(i).getDiscoveryLocation()+ "\",\n" );
+            content=content.concat("    \"DiscoveryLocation\":" + "\"" +selectedArtifacts.get(i).getDiscoveryLocation()+ "\",\n" );
             content=content.concat("    \"Composition\":" + "\"" +selectedArtifacts.get(i).getComposition()+ "\",\n" );
-            content=content.concat("    \"Discovery Date\":" + "\"" +selectedArtifacts.get(i).getDiscoveryDate()+ "\",\n" );
-            content=content.concat("    \"Current Place\":" + "\"" +selectedArtifacts.get(i).getCurrentPlace()+ "\",\n" );
+            content=content.concat("    \"DiscoveryDate\":" + "\"" +selectedArtifacts.get(i).getDiscoveryDate()+ "\",\n" );
+            content=content.concat("    \"CurrentPlace\":" + "\"" +selectedArtifacts.get(i).getCurrentPlace()+ "\",\n" );
             
             content=content.concat("    \"dimensions\": {");
         
@@ -65,7 +65,7 @@ public class ArtifactManager {
             }
             content= content.substring(0, content.length()-1);
             content= content.concat("],\n");
-            content=content.concat("    \"Image Paths\": [");
+            content=content.concat("    \"ImagePaths\": [");
             for(int j=0; j<selectedArtifacts.get(i).getImagePaths().size(); j++){
                 content=content.concat("\""+selectedArtifacts.get(i).getImagePaths().get(j)+"\", ");
             }
