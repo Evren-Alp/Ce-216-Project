@@ -16,7 +16,7 @@ public class ArtifactManager {
         artifacts.add(artifact);
         List<Artifact> newArtifact = new ArrayList<Artifact>();
         newArtifact.add(artifact);
-        exportSelectedArtifactsToJSON(artifacts, filepath);
+        exportSelectedArtifactsToJSON(newArtifact, filepath, true);
     }
 
     public void editArtifact(Artifact artifact) {
@@ -38,7 +38,7 @@ public class ArtifactManager {
     public void importArtifactsFromJSON(String filePath) {
     }
 
-    public static void exportSelectedArtifactsToJSON(List<Artifact> selectedArtifacts, String filePath) {
+    public static void exportSelectedArtifactsToJSON(List<Artifact> selectedArtifacts, String filePath, boolean append) {
         FileManager fileMan = new FileManager(filePath, false);
         String content ="";
         for(int i = 0; i<selectedArtifacts.size(); i++){
@@ -73,7 +73,6 @@ public class ArtifactManager {
             content=content.substring(0, content.length()-2);
             content=content.concat("]\n}\n"); 
         }
-        System.out.println("content: " + content);
-        fileMan.writeToFile(content, filePath);
+        fileMan.writeToFile(content, filePath, append);
     }
 }
