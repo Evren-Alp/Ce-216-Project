@@ -372,8 +372,6 @@ public class GUI extends Application {
         FileChooser fc = new FileChooser();
         fc.setTitle("Select file to save!");
         File f = fc.showSaveDialog(stage);
-        // ArtifactManager artMan = new ArtifactManager();
-        // artMan.exportSelectedArtifactsToJSON(textArea, f.toPath());
         Files.writeString(f.toPath(), textArea.getText(), StandardOpenOption.CREATE);
     }
 
