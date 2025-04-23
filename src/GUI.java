@@ -7,6 +7,9 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -85,12 +88,26 @@ public class GUI extends Application {
         searcHBox.setPadding(new Insets(10));
         TextField searchField = new TextField();
         searchField.setPromptText("Search...");
-        Button searchButton = new Button("Search");
-        searchButton.setOnAction(e-> {
-            String query = searchField.getText().toLowerCase();
-            ArtifactManager.searchArtifacts(query);
+        ObservableList<Artifact> artifactList = FXCollections.observableArrayList();
+        FilteredList<Artifact> filteredList = new FilteredList<>(artifactList, p -> true);
+        table.setItems(filteredList);
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredList.setPredicate(artifact -> {
+                // If the search field is empty, display all artifacts
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+        
+                // Compare artifact properties with the search query (case-insensitive)
+                String lowerCaseFilter = newValue.toLowerCase();
+        
+                if (artifact.getArtifactId().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Matches Artifact ID
+                }
+                return false; // No match
+            });
         });
-        searcHBox.getChildren().addAll(searchField, searchButton);
+        searcHBox.getChildren().addAll(searchField);
         searcHBox.setStyle("-fx-border-color: gray; -fx-border-width: 2 0 0 0; -fx-padding: 10;");
 
         // ---------------------------
@@ -160,7 +177,7 @@ public class GUI extends Application {
                              Double.parseDouble(weight.getText()), Double.parseDouble(width.getText()),
                         Double.parseDouble(height.getText()), Double.parseDouble(length.getText()), taglist, imagePathsList);
                 
-                table.getItems().add(artifact);
+                artifactList.add(artifact);
                 ArtifactManager.addArtifact(artifact);
                 
                 Alert alert = new Alert(AlertType.INFORMATION);
@@ -263,7 +280,7 @@ public class GUI extends Application {
             confirmation.setContentText("Are you sure you want to delete the selected artifact?");
             if (confirmation.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
                 String oldArtifactID = selected.getArtifactId();
-                table.getItems().remove(selected); // Remove from TableView
+                artifactList.remove(selected); // Remove from artifactList
                 ArtifactManager.deleteArtifact(oldArtifactID); // Remove from the data source
             }
         });

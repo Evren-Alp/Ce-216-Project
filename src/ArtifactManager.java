@@ -27,6 +27,7 @@ public class ArtifactManager {
     }
 
     public static List<Artifact> searchArtifacts(String query) {
+        //we dont need this method anymore 
         return artifacts;
     }
 
