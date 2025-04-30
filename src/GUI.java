@@ -499,11 +499,28 @@ public class GUI extends Application {
     helpStage.showAndWait();
     }
 
-    private void saveFile(Stage stage ,TextArea textArea) throws IOException {
+    private void saveFile(Stage stage, TextArea tex) throws IOException {
         FileChooser fc = new FileChooser();
         fc.setTitle("Select file to save!");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        
+        Artifact selected = table.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("No Selection");
+            alert.setHeaderText(null);
+            alert.setContentText("Select an artifact to save.");
+            alert.showAndWait();
+            return;
+        }
+        
         File f = fc.showSaveDialog(stage);
-        Files.writeString(f.toPath(), textArea.getText(), StandardOpenOption.CREATE);
+        if (f != null) {
+            if (!f.getName().endsWith(".json")) {
+                f = new File(f.getAbsolutePath() + ".json");
+            }
+            Files.writeString(f.toPath(), ArtifactManager.artifactToJSON(selected), StandardOpenOption.CREATE);
+        }
     }
 
     private void openFile(Stage stage, TextArea textArea) throws IOException {
