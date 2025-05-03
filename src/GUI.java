@@ -279,9 +279,14 @@ public class GUI extends Application {
                 selected.setHeight(Double.parseDouble(heightField.getText()));
                 selected.setLength(Double.parseDouble(lengthField.getText()));
                 selected.setTags(new ArrayList<>(List.of(tagsField.getText().split(" "))));
+            
                 table.refresh();
+            
+                ArtifactManager.overwriteArtifacts(artifactList, "Artifact_Files\\Artifacts.json");
+            
                 editStage.close();
             });
+            ;
             editLayout.getChildren().addAll(artifactIDField, artifactNameField, categoryField, civilizationField, discoveryLocField, compositionField, discoveryDateField, currentPlField, weightField, widthField, heightField, lengthField, tagsField, saveEditButton);
             Scene editScene = new Scene(editLayout, 300, 600);
             editStage.setScene(editScene);
@@ -392,10 +397,8 @@ public class GUI extends Application {
         mainLayout.setTop(menu);
         mainLayout.setLeft(sidePanel);
         table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-        ScrollPane scrollPane = new ScrollPane(table);
-        scrollPane.setFitToHeight(true);
-        scrollPane.setFitToWidth(false);
-        mainLayout.setCenter(scrollPane);  
+        
+        mainLayout.setCenter(table);  
         mainLayout.setBottom(searcHBox);
 
         Scene scene = new Scene(mainLayout, 800, 600);
@@ -403,6 +406,7 @@ public class GUI extends Application {
         
 
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
     }
 
@@ -452,8 +456,17 @@ public class GUI extends Application {
         colDiscoveryLocation.setPrefWidth(120);
         colDiscoveryDate.setPrefWidth(120);
         table.getColumns().addAll(colImage, colId, colName, colCategory, colCivilization, colDiscoveryLocation, colComposition, colDiscoveryDate, colCurrentPlace, colWeight, colWidth, colHeight, colLength, colTags);
-        table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        table.widthProperty().addListener((obs, oldVal, newVal) -> {
+            double totalWidth = newVal.doubleValue();
+            int columnCount = table.getColumns().size();
+            for (TableColumn<?, ?> col : table.getColumns()) {
+                col.setPrefWidth(totalWidth / columnCount);
+            }
+        });
+
         refreshTable();
+        table.setStyle("-fx-font-size: 20px;");
+
     }
     
 
@@ -540,6 +553,7 @@ public class GUI extends Application {
     }
 
     public static void main(String[] args) {
+        
        launch();
     }
 }

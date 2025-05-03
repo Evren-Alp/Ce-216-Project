@@ -41,16 +41,14 @@ public class ArtifactManager {
     public static void exportSelectedArtifactsToJSON(List<Artifact> selectedArtifacts, String filePath, boolean append) {
         List<Artifact> allArtifacts = new ArrayList<>();
     
-        // Step 1: If appending, read existing artifacts
         if (append) {
             List<Artifact> existing = FileManager.loadArtifactsFromFile(filePath);
             allArtifacts.addAll(existing);
         }
     
-        // Step 2: Add new artifacts
         allArtifacts.addAll(selectedArtifacts);
     
-        // Step 3: Convert to JSON array string
+        
         StringBuilder content = new StringBuilder();
         content.append("[\n");
     
@@ -95,9 +93,8 @@ public class ArtifactManager {
     
         content.append("]\n");
     
-        // Step 4: Write final JSON to file (overwrite)
         FileManager fileMan = new FileManager(filePath, false);
-        fileMan.writeToFile(content.toString(), filePath, false); // always overwrite to avoid corruption
+        fileMan.writeToFile(content.toString(), filePath, false); 
     }
     
     
@@ -127,7 +124,7 @@ public class ArtifactManager {
             content.append("\"").append(artifact.getTags().get(j)).append("\",");
         }
         if (!artifact.getTags().isEmpty()) {
-            content.setLength(content.length() - 1); // Remove trailing comma
+            content.setLength(content.length() - 1); // virgul sil
         }
         content.append("],\n");
 
@@ -136,10 +133,15 @@ public class ArtifactManager {
             content.append("\"").append(artifact.getImagePaths().get(j)).append("\", ");
         }
         if (!artifact.getImagePaths().isEmpty()) {
-            content.setLength(content.length() - 2); // Remove trailing comma and space
+            content.setLength(content.length() - 2); // virgul ve bosluk sil
         }
         content.append("]\n}\n");
 
         return content.toString();
     }
+
+    public static void overwriteArtifacts(List<Artifact> updatedList, String filePath) {
+        exportSelectedArtifactsToJSON(updatedList, filePath, false); 
+    }
+    
 }
