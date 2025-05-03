@@ -10,12 +10,22 @@ public class Artifact {
     public String discoveryDate;
     public String currentPlace;
     public double weight, width, height, length;
+<<<<<<< Updated upstream
     public List<String> tags;
     public List<String> imagePaths;
+=======
+    public ArrayList<String> tags;
+    public String imagePath;
+    public ImageView imageView;
+>>>>>>> Stashed changes
 
     public Artifact(String artifactId ,String name, String category, String civilization, 
                String discoveryLocation, String composition, String discoveryDate,
+<<<<<<< Updated upstream
                 String currentPlace, double weight, double width, double height, double length){
+=======
+                String currentPlace, double weight, double width, double height, double length, ArrayList<String> tags, String imagePath) {
+>>>>>>> Stashed changes
         this.artifactId = artifactId;
         this.name = name;
         this.category = category;
@@ -28,8 +38,31 @@ public class Artifact {
         this.width = width;
         this.height = height;
         this.length = length;
+<<<<<<< Updated upstream
+=======
+        this.tags = tags;
+        this.imagePath = imagePath;
+        
+        FileInputStream inputstream = null;
+        try {
+            inputstream = new FileInputStream(imagePath); 
+        } catch (FileNotFoundException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Image file not found. Please check the path.");
+            alert.showAndWait();
+            e.printStackTrace();
+        } 
+        Image image = new Image(inputstream); 
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(50);
+        imageView.setFitHeight(50);
+        this.imageView= imageView;
+>>>>>>> Stashed changes
     }
-    public Artifact(){}
+
+        public Artifact(){}
 
     public void printArtifactData(){
         System.out.println("---------- Artifact Data ----------");
@@ -38,10 +71,7 @@ public class Artifact {
         System.out.println("Composition: " + this.composition);
         System.out.println("CurrentPlace: " + this.currentPlace);
         System.out.println("Weight: " + this.weight + "    Height: " + this.height + "    Width: " + this.width + "    Length: " + this.length);
-        System.out.println("Image paths:");
-        for(String path:imagePaths){
-            System.out.println("  -" + path);
-        }
+        System.out.println("Image path:" + this.imagePath);
         System.out.println("Tags:");
         for(String tag:tags){
             System.out.println("  -" + tag);
@@ -155,11 +185,11 @@ public class Artifact {
         this.tags = tags;
     }
 
-    public List<String> getImagePaths() {
-        return imagePaths;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImagePaths(List<String> imagePaths) {
-        this.imagePaths = imagePaths;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

@@ -74,6 +74,41 @@ public class GUI extends Application{
         btnAdd.setOnAction(e -> {
             Stage artifactStage = new Stage();
             artifactStage.setTitle("Add Artifact");
+<<<<<<< Updated upstream
+=======
+            VBox artifactLayout = new VBox(10);
+            artifactLayout.setPadding(new Insets(10));
+            
+            // Create text fields for artifact properties
+            TextField artifactName = new TextField();
+            artifactName.setPromptText("Artifact Name");
+            TextField artifactID = new TextField();
+            artifactID.setPromptText("Artifact ID");
+            TextField category = new TextField();
+            category.setPromptText("Category");
+            TextField civilization = new TextField();
+            civilization.setPromptText("Civilization");
+            TextField discoveryLoc = new TextField();
+            discoveryLoc.setPromptText("Discovery Location");
+            TextField composition = new TextField();
+            composition.setPromptText("Composition");
+            TextField discoveryDate = new TextField();
+            discoveryDate.setPromptText("Discovery Date");
+            TextField currentPl = new TextField();
+            currentPl.setPromptText("Current Place");
+            TextField weight = new TextField();
+            weight.setPromptText("Weight");
+            TextField width = new TextField();
+            width.setPromptText("Width");
+            TextField height = new TextField();
+            height.setPromptText("Height");
+            TextField length = new TextField();
+            length.setPromptText("Length");
+            TextField tags = new TextField();
+            tags.setPromptText("Tags");
+            TextField imagePath = new TextField();
+            imagePath.setPromptText("Image path (opt.)");
+>>>>>>> Stashed changes
 
             VBox artifactLayout = new VBox(40);
             artifactLayout.setPadding(new Insets(40));
@@ -108,19 +143,42 @@ public class GUI extends Application{
         
             Button saveButton = new Button("Save");
             saveButton.setOnAction(event -> {
+<<<<<<< Updated upstream
             if (!artifactID.getText().isEmpty()&!artifactName.getText().isEmpty()&
             !category.getText().isEmpty()&!civilization.getText().isEmpty()& 
        !discoveryLoc.getText().isEmpty()&composition.getText().isEmpty()& 
     !discoveryDate.getText().isEmpty()&!currentPl.getText().isEmpty()&!weight.getText().isEmpty()&
     !width.getText().isEmpty()&!height.getText().isEmpty()&!length.getText().isEmpty())
              { //her bilgi girilsin mi yoksa sadece biri yeter mi??
+=======
+            if (!artifactID.getText().isEmpty() && !artifactName.getText().isEmpty() &&
+            !category.getText().isEmpty() && !civilization.getText().isEmpty() && 
+            !discoveryLoc.getText().isEmpty() && !composition.getText().isEmpty() && 
+            !discoveryDate.getText().isEmpty() && !currentPl.getText().isEmpty() && !weight.getText().isEmpty() &&
+            !width.getText().isEmpty() && !height.getText().isEmpty() && !length.getText().isEmpty() && !tags.getText().isEmpty()) {
+                String[] temp = tags.getText().split(" ");
+                ArrayList<String> taglist = new ArrayList<>();
+                for (String tag : temp) {
+                    taglist.add(tag.trim());
+                }
+                String img = "";
+                if(imagePath.getText().isEmpty()) img = "Images/default _image.jpg";
+               
+>>>>>>> Stashed changes
                 Artifact artifact = new Artifact(artifactID.getText(), artifactName.getText(),
                                          category.getText(), civilization.getText(), 
                                     discoveryLoc.getText(), composition.getText(), 
                                  discoveryDate.getText(), currentPl.getText(),
                              Double.parseDouble(weight.getText()), Double.parseDouble(width.getText()),
+<<<<<<< Updated upstream
                         Double.parseDouble(height.getText()), Double.parseDouble(length.getText()));
                 //Add the artifact to the existing artifact list but the list does not exist yet
+=======
+                        Double.parseDouble(height.getText()), Double.parseDouble(length.getText()), taglist, img);
+                
+                artifactList.add(artifact);
+                ArtifactManager.addArtifact(artifact);
+>>>>>>> Stashed changes
                 
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Success");
@@ -139,9 +197,15 @@ public class GUI extends Application{
 
             artifactLayout.setSpacing(1); 
             artifactLayout.getChildren().addAll(
+<<<<<<< Updated upstream
                 artifactName, artifactID, category, civilization, discoveryLoc, 
                 composition, discoveryDate, currentPl, weight, width, 
                 height, length, tags, saveButton
+=======
+                artifactName, artifactID, category, civilization, discoveryLoc,
+                composition, discoveryDate, currentPl, weight, width,
+                height, length, tags, imagePath, saveButton
+>>>>>>> Stashed changes
             );
 
             Scene artifactScene = new Scene(artifactLayout, 300, 600);

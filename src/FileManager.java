@@ -66,7 +66,6 @@ class FileManager{
 
         String dimensions = "";
         String tags = "";
-        String imagePaths = "";
 
 
 
@@ -83,7 +82,7 @@ class FileManager{
             else if(matcher.group(1).toLowerCase().equals("dimensions")) { dimensions = matcher.group(3); if(DEBUGGING) System.out.println("[OK] found dimensions"); }
             else if(matcher.group(1).toLowerCase().equals("weight")) { this.myArtifact.weight = Double.parseDouble(matcher.group(5)); if(DEBUGGING) System.out.println("[OK] found weight"); }
             else if(matcher.group(1).toLowerCase().equals("tags")) { tags = matcher.group(4); if(DEBUGGING) System.out.println("[OK] found tags"); }
-            else if(matcher.group(1).toLowerCase().equals("imagepaths")) { imagePaths = matcher.group(4); if(DEBUGGING) System.out.println("[OK] found image paths"); }
+            else if(matcher.group(1).toLowerCase().equals("imagepath")) { this.myArtifact.imagePath = matcher.group(2); if (DEBUGGING) System.out.println("[OK] found imagePath"); }
             else{ System.out.println("Invalid input key. Terminating..."); System.exit(1); }
         }
 
@@ -98,6 +97,7 @@ class FileManager{
         }
 
         // separating tags and saving them in an arraylist
+<<<<<<< Updated upstream
         Pattern pathsSeparator = Pattern.compile("\"([A-z0-9\\/\\\\_.]*)\"");
         Matcher pathsMatcher = pathsSeparator.matcher(imagePaths);
         while(pathsMatcher.find()){
@@ -107,6 +107,9 @@ class FileManager{
 
         // separating image paths and saving them in an arraylist
         Pattern tagsSeparator = Pattern.compile("\"([A-z0-9\\/\\\\_.]*)\"");
+=======
+        Pattern tagsSeparator = Pattern.compile("\"([A-z0-9\\/.:]*)\"*");
+>>>>>>> Stashed changes
         Matcher tagsMatcher = tagsSeparator.matcher(tags);
         while(tagsMatcher.find()){
             if(DEBUGGING) System.out.println("[OK] found a tag");
