@@ -27,6 +27,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class GUI extends Application {
+    ObservableList<Artifact> artifactList = FXCollections.observableArrayList();
+
     public static TextArea textArea;
     
     // TableView to display artifacts
@@ -47,7 +49,7 @@ public class GUI extends Application {
         Menu mHelp = new Menu("Help");
 
         mNewFile.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
-        mNewFile.setOnAction(e -> newFile(textArea));
+        //mNewFile.setOnAction(e -> newFile(textArea));
         mQuit.setOnAction(e -> stage.close());
         mQuit.setAccelerator(KeyCombination.keyCombination("ESC"));
         mSave.setOnAction(e -> {
@@ -83,7 +85,6 @@ public class GUI extends Application {
         searcHBox.setPadding(new Insets(10));
         TextField searchField = new TextField();
         searchField.setPromptText("Search...");
-        ObservableList<Artifact> artifactList = FXCollections.observableArrayList();
         FilteredList<Artifact> filteredList = new FilteredList<>(artifactList, p -> true);
         table.setItems(filteredList);
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -312,10 +313,7 @@ public class GUI extends Application {
             }
         });
         Button btnRefresh = new Button("Refresh List");
-        btnRefresh.setOnAction(e -> {
-            // Refresh the table data if needed
-            table.refresh();
-        });
+        btnRefresh.setOnAction(e -> refreshTable());
         Button importJson = new Button("Import from JSON");
         importJson.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
@@ -366,7 +364,7 @@ public class GUI extends Application {
         // Set accelerators and actions for menu items
         // ---------------------------
         mNewFile.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
-        mNewFile.setOnAction(e -> newFile(textArea));
+       // mNewFile.setOnAction(e -> newFile(textArea));
         mQuit.setOnAction(e -> stage.close());
         mQuit.setAccelerator(KeyCombination.keyCombination("ESC"));
         mSave.setOnAction(e -> {
@@ -455,12 +453,11 @@ public class GUI extends Application {
         colDiscoveryDate.setPrefWidth(120);
         table.getColumns().addAll(colImage, colId, colName, colCategory, colCivilization, colDiscoveryLocation, colComposition, colDiscoveryDate, colCurrentPlace, colWeight, colWidth, colHeight, colLength, colTags);
         table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        refreshTable();
     }
     
 
-    public static void newFile(TextArea textArea){
-        textArea.clear();
-    }
+    
 
     private static void aboutText(){
     Stage helpStage = new Stage();
@@ -528,6 +525,18 @@ public class GUI extends Application {
         fc.setTitle("Select file to open!");
         File f = fc.showOpenDialog(stage);
         textArea.setText(Files.readString(f.toPath()));
+    }
+    private void refreshTable() {
+        {
+            
+            artifactList.clear();
+            List<Artifact> arr =  FileManager.loadArtifactsFromFile("Artifact_Files\\Artifacts.json");
+            for (Artifact art : arr) {
+                artifactList.add(art);
+                
+            }
+            table.refresh();
+        }
     }
 
     public static void main(String[] args) {

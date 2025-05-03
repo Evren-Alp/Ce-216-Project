@@ -1,4 +1,8 @@
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -6,6 +10,10 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.FileInputStream;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 class FileManager{
     private Artifact myArtifact = new Artifact();
@@ -42,63 +50,102 @@ class FileManager{
 
     }
 
-    public void readFile(){
+    public static List<Artifact> loadArtifactsFromFile(String filePath) {
+        List<Artifact> artifacts = new ArrayList<>();
+    
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            StringBuilder jsonBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line.trim());
+            }
+    
+            String json = jsonBuilder.toString().trim();
+            if (json.startsWith("[")) json = json.substring(1);
+            if (json.endsWith("]")) json = json.substring(0, json.length() - 1);
+    
+            String[] objects = json.split("\\},\\s*\\{");
+    
+            for (String obj : objects) {
+                obj = obj.trim();
+                if (!obj.startsWith("{")) obj = "{" + obj;
+                if (!obj.endsWith("}")) obj = obj + "}";
+    
+                Artifact a = new Artifact();
+                a.setArtifactId(extract(obj, "ArtifactId"));
+                a.setName(extract(obj, "Name"));
+                a.setCategory(extract(obj, "Category"));
+                a.setCivilization(extract(obj, "Civilization"));
+                a.setDiscoveryLocation(extract(obj, "DiscoveryLocation"));
+                a.setComposition(extract(obj, "Composition"));
+                a.setDiscoveryDate(extract(obj, "DiscoveryDate"));
+                a.setCurrentPlace(extract(obj, "CurrentPlace"));
+    
+                a.setWidth(Double.parseDouble(extract(obj, "Width")));
+                a.setHeight(Double.parseDouble(extract(obj, "Height")));
+                a.setLength(Double.parseDouble(extract(obj, "Length")));
+                a.setWeight(Double.parseDouble(extract(obj, "Weight")));
+    
+                a.setTags(new ArrayList<>(extractList(obj, "Tags")));
+                List<String> paths = extractList(obj, "ImagePaths");
+                a.setImagePaths(paths);
 
-        Pattern pattern1 = Pattern.compile("\"(\\w+)\":\\s*(?:\"([^\"]+)\"|(\\{[^}]+\\})|(\\[.*?\\])|([\\d.]+))");
-        Matcher matcher = pattern1.matcher(this.text);
 
-        String dimensions = "";
-        String tags = "";
-        String imagePaths = "";
+            if (!paths.isEmpty()) {
+                try {
+                    FileInputStream inputstream = new FileInputStream(paths.get(0));
+                    Image image = new Image(inputstream);
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(50);
+                    imageView.setFitHeight(50);
+                    a.setImageView(imageView);
+                } catch (FileNotFoundException e) {
+                    System.err.println("Image not found at path: " + paths.get(0));
+                }
+            }
 
-        // saving all the values
-        while(matcher.find()){
-            if(matcher.group(1).toLowerCase().equals("artifactid")) { this.myArtifact.artifactId = matcher.group(2); if(DEBUGGING) System.out.println("[OK] found ID"); }
-            else if(matcher.group(1).toLowerCase().equals("name")) { this.myArtifact.name = matcher.group(2); if(DEBUGGING) System.out.println("[OK] found name"); }
-            else if(matcher.group(1).toLowerCase().equals("category")) { this.myArtifact.category = matcher.group(2); if(DEBUGGING) System.out.println("[OK] found category"); }
-            else if(matcher.group(1).toLowerCase().equals("civilization")) { this.myArtifact.civilization = matcher.group(2); if(DEBUGGING) System.out.println("[OK] found civilization"); }
-            else if(matcher.group(1).toLowerCase().equals("discoverylocation")) { this.myArtifact.discoveryLocation = matcher.group(2); if(DEBUGGING) System.out.println("[OK] found discovery location"); }
-            else if(matcher.group(1).toLowerCase().equals("composition")) { this.myArtifact.composition = matcher.group(2); if(DEBUGGING) System.out.println("[OK] found composition"); }
-            else if(matcher.group(1).toLowerCase().equals("discoverydate")) { this.myArtifact.discoveryDate = matcher.group(2); if(DEBUGGING) System.out.println("[OK] found discovery date"); }
-            else if(matcher.group(1).toLowerCase().equals("currentplace")) { this.myArtifact.currentPlace = matcher.group(2); if(DEBUGGING) System.out.println("[OK] found current place"); }
-            else if(matcher.group(1).toLowerCase().equals("dimensions")) { dimensions = matcher.group(3); if(DEBUGGING) System.out.println("[OK] found dimensions"); }
-            else if(matcher.group(1).toLowerCase().equals("weight")) { this.myArtifact.weight = Double.parseDouble(matcher.group(5)); if(DEBUGGING) System.out.println("[OK] found weight"); }
-            else if(matcher.group(1).toLowerCase().equals("tags")) { tags = matcher.group(4); if(DEBUGGING) System.out.println("[OK] found tags"); }
-            else if(matcher.group(1).toLowerCase().equals("imagepaths")) { imagePaths = matcher.group(4); if(DEBUGGING) System.out.println("[OK] found image paths"); }
-            else{ System.out.println("Invalid input key. Terminating..."); System.exit(1); }
+    
+                artifacts.add(a);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        // separating and saving all the dimension values
-        Pattern dimensionsSeparator = Pattern.compile("\"(\\w+)\"\\s*:\\s*([0-9.]+)");
-        Matcher dimensionMatcher = dimensionsSeparator.matcher(dimensions);
-        while(dimensionMatcher.find()){
-            if(dimensionMatcher.group(1).toLowerCase().equals("width")) { this.myArtifact.width = Double.parseDouble(dimensionMatcher.group(2)); if(DEBUGGING) System.out.println("[OK] found width"); }
-            else if(dimensionMatcher.group(1).toLowerCase().equals("height")) { this.myArtifact.height = Double.parseDouble(dimensionMatcher.group(2)); if(DEBUGGING) System.out.println("[OK] found height"); }
-            else if(dimensionMatcher.group(1).toLowerCase().equals("length")) { this.myArtifact.length = Double.parseDouble(dimensionMatcher.group(2)); if(DEBUGGING) System.out.println("[OK] found length"); }
-            else{ System.out.println("Invalid input key. Terminating..."); System.exit(1); }
-        }
-
-        // separating tags and saving them in an arraylist
-        Pattern pathsSeparator = Pattern.compile("\"([A-z0-9\\/.:]*)\"*");
-        Matcher pathsMatcher = pathsSeparator.matcher(imagePaths);
-        while(pathsMatcher.find()){
-            if(DEBUGGING) System.out.println("[OK] found an image path");
-            this.myArtifact.imagePaths.add(pathsMatcher.group(1));
-        }
-
-        // separating image paths and saving them in an arraylist
-        Pattern tagsSeparator = Pattern.compile("\"([A-z0-9\\/.:]*)\"*");
-        Matcher tagsMatcher = tagsSeparator.matcher(tags);
-        while(tagsMatcher.find()){
-            if(DEBUGGING) System.out.println("[OK] found a tag");
-            this.myArtifact.tags.add(tagsMatcher.group(1));
-        }
-
-        
-        // if(myArtifact.artifactID.equals("")){ if(DEBUGGING) System.out.println("Artifact ID not given."); myArtifact.artifactID = "NULL"; }
-
-
+    
+        return artifacts;
     }
+    
+    private static String extract(String json, String key) {
+        try {
+            String pattern = "\"" + key + "\":\\s*\"(.*?)\"";
+            if (json.matches("(?s).*" + pattern + ".*")) {
+                return json.replaceAll("(?s).*" + pattern + ".*", "$1");
+            }
+    
+            pattern = "\"" + key + "\":\\s*([\\d\\.]+)";
+            if (json.matches("(?s).*" + pattern + ".*")) {
+                return json.replaceAll("(?s).*" + pattern + ".*", "$1");
+            }
+    
+        } catch (Exception e) {
+            System.out.println("Failed to extract: " + key);
+        }
+        return "";
+    }
+    
+    
+    private static List<String> extractList(String json, String key) {
+        List<String> list = new ArrayList<>();
+        String pattern = "\"" + key + "\":\\s*\\[(.*?)\\]";
+        if (json.matches("(?s).*" + pattern + ".*")) {
+            String inner = json.replaceAll("(?s).*" + pattern + ".*", "$1");
+            String[] items = inner.split(",");
+            for (String item : items) {
+                list.add(item.trim().replaceAll("^\"|\"$", "").replace("\\\\", "\\"));
+            }
+        }
+        return list;
+    }
+    
 
     public Artifact getArtifact(){
         return myArtifact;

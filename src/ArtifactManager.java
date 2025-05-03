@@ -12,7 +12,7 @@ public class ArtifactManager {
     }
 
     public static void addArtifact(Artifact artifact) {
-        String filepath = "Artifacts.json";
+        String filepath = "Artifact_Files\\Artifacts.json";
         artifacts.add(artifact);
         List<Artifact> newArtifact = new ArrayList<Artifact>();
         newArtifact.add(artifact);
@@ -39,42 +39,68 @@ public class ArtifactManager {
     }
 
     public static void exportSelectedArtifactsToJSON(List<Artifact> selectedArtifacts, String filePath, boolean append) {
-        FileManager fileMan = new FileManager(filePath, false);
-        String content ="";
-        for(int i = 0; i<selectedArtifacts.size(); i++){
-            content=content.concat("{\n");
-            content=content.concat("    \"ArtifactId\":" + "\"" +selectedArtifacts.get(i).getArtifactId()+ "\",\n" );
-            content=content.concat("    \"Name\":" + "\"" +selectedArtifacts.get(i).getName()+ "\",\n" ); 
-            content=content.concat("    \"Category\":" + "\"" +selectedArtifacts.get(i).getCategory()+ "\",\n" );
-            content=content.concat("    \"Civilization\":" + "\"" +selectedArtifacts.get(i).getCivilization()+ "\",\n" );
-            content=content.concat("    \"DiscoveryLocation\":" + "\"" +selectedArtifacts.get(i).getDiscoveryLocation()+ "\",\n" );
-            content=content.concat("    \"Composition\":" + "\"" +selectedArtifacts.get(i).getComposition()+ "\",\n" );
-            content=content.concat("    \"DiscoveryDate\":" + "\"" +selectedArtifacts.get(i).getDiscoveryDate()+ "\",\n" );
-            content=content.concat("    \"CurrentPlace\":" + "\"" +selectedArtifacts.get(i).getCurrentPlace()+ "\",\n" );
-            
-            content=content.concat("    \"dimensions\": {");
-        
-            content=content.concat("\"Width\":" + selectedArtifacts.get(i).getWidth() + ", ");
-            content=content.concat("\"Height\":" + selectedArtifacts.get(i).getHeight() + ", ");
-            content=content.concat("\"Length\":" + selectedArtifacts.get(i).getLength() + " }, \n");
-
-            content=content.concat("    \"Weight\":" + selectedArtifacts.get(i).getWeight() + ", \n");
-
-            content=content.concat("    \"Tags\": [");
-            for(int j=0; j<selectedArtifacts.get(i).getTags().size(); j++){
-                content=content.concat("\""+selectedArtifacts.get(i).getTags().get(j)+"\",");
-            }
-            content= content.substring(0, content.length()-1);
-            content= content.concat("],\n");
-            content=content.concat("    \"ImagePaths\": [");
-            for(int j=0; j<selectedArtifacts.get(i).getImagePaths().size(); j++){
-                content=content.concat("\""+selectedArtifacts.get(i).getImagePaths().get(j)+"\", ");
-            }
-            content=content.substring(0, content.length()-2);
-            content=content.concat("]\n}\n"); 
+        List<Artifact> allArtifacts = new ArrayList<>();
+    
+        // Step 1: If appending, read existing artifacts
+        if (append) {
+            List<Artifact> existing = FileManager.loadArtifactsFromFile(filePath);
+            allArtifacts.addAll(existing);
         }
-        fileMan.writeToFile(content, filePath, append);
+    
+        // Step 2: Add new artifacts
+        allArtifacts.addAll(selectedArtifacts);
+    
+        // Step 3: Convert to JSON array string
+        StringBuilder content = new StringBuilder();
+        content.append("[\n");
+    
+        for (int i = 0; i < allArtifacts.size(); i++) {
+            Artifact a = allArtifacts.get(i);
+            content.append("  {\n");
+            content.append("    \"ArtifactId\": \"" + a.getArtifactId() + "\",\n");
+            content.append("    \"Name\": \"" + a.getName() + "\",\n");
+            content.append("    \"Category\": \"" + a.getCategory() + "\",\n");
+            content.append("    \"Civilization\": \"" + a.getCivilization() + "\",\n");
+            content.append("    \"DiscoveryLocation\": \"" + a.getDiscoveryLocation() + "\",\n");
+            content.append("    \"Composition\": \"" + a.getComposition() + "\",\n");
+            content.append("    \"DiscoveryDate\": \"" + a.getDiscoveryDate() + "\",\n");
+            content.append("    \"CurrentPlace\": \"" + a.getCurrentPlace() + "\",\n");
+    
+            content.append("    \"dimensions\": {\n");
+            content.append("      \"Width\": " + a.getWidth() + ",\n");
+            content.append("      \"Height\": " + a.getHeight() + ",\n");
+            content.append("      \"Length\": " + a.getLength() + "\n");
+            content.append("    },\n");
+    
+            content.append("    \"Weight\": " + a.getWeight() + ",\n");
+    
+            content.append("    \"Tags\": [");
+            for (int j = 0; j < a.getTags().size(); j++) {
+                content.append("\"" + a.getTags().get(j) + "\"");
+                if (j < a.getTags().size() - 1) content.append(", ");
+            }
+            content.append("],\n");
+    
+            content.append("    \"ImagePaths\": [");
+            for (int j = 0; j < a.getImagePaths().size(); j++) {
+                content.append("\"" + a.getImagePaths().get(j).replace("\\", "\\\\") + "\"");
+                if (j < a.getImagePaths().size() - 1) content.append(", ");
+            }
+            content.append("]\n");
+    
+            content.append("  }");
+            if (i < allArtifacts.size() - 1) content.append(",");
+            content.append("\n");
+        }
+    
+        content.append("]\n");
+    
+        // Step 4: Write final JSON to file (overwrite)
+        FileManager fileMan = new FileManager(filePath, false);
+        fileMan.writeToFile(content.toString(), filePath, false); // always overwrite to avoid corruption
     }
+    
+    
 
 
     public static String artifactToJSON(Artifact artifact) {
