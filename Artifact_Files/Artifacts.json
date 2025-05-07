@@ -1,74 +1,110 @@
 [
   {
-    "ArtifactId": "123",
-    "Name": "huba",
-    "Category": "984",
-    "Civilization": "684",
-    "DiscoveryLocation": "21",
-    "Composition": "96851",
-    "DiscoveryDate": "6521",
-    "CurrentPlace": "684",
+    "ArtifactId": "A123",
+    "Name": "Ancient Vase",
+    "Category": "Ceramics",
+    "Civilization": "Greek",
+    "DiscoveryLocation": "Athens, Greece",
+    "Composition": "Clay",
+    "DiscoveryDate": "1923-05-14",
+    "CurrentPlace": "National Archaeological Museum, Athens",
     "dimensions": {
-      "Width": 8465.0,
-      "Height": 16.0,
-      "Length": 816.0
+      "Width": 25.4,
+      "Height": 35.2,
+      "Length": 25.4
     },
-    "Weight": 3516.0,
-    "Tags": ["51"],
-    "ImagePaths": ["C:\\Users\\Evren Alp\\Pictures\\20250105_174328.jpg"]
+    "Weight": 2.3,
+    "Tags": ["vase", "ancient", "ceramics"],
+    "ImagePaths": ["C:\\Users\\Evren Alp\\Pictures\\ancient_vase.jpg"]
   },
   {
-    "ArtifactId": "654",
-    "Name": "naber",
-    "Category": "654",
-    "Civilization": "654",
-    "DiscoveryLocation": "654",
-    "Composition": "654",
-    "DiscoveryDate": "654",
-    "CurrentPlace": "654",
+    "ArtifactId": "B654",
+    "Name": "Bronze Sword",
+    "Category": "Weapons",
+    "Civilization": "Roman",
+    "DiscoveryLocation": "Pompeii, Italy",
+    "Composition": "Bronze",
+    "DiscoveryDate": "1878-09-21",
+    "CurrentPlace": "British Museum, London",
     "dimensions": {
-      "Width": 654.0,
-      "Height": 654.0,
-      "Length": 654.0
+      "Width": 5.0,
+      "Height": 2.0,
+      "Length": 75.0
     },
-    "Weight": 654.0,
-    "Tags": ["654"],
-    "ImagePaths": ["C:\\Users\\Evren Alp\\Pictures\\20250105_174328.jpg"]
+    "Weight": 1.8,
+    "Tags": ["sword", "bronze", "weapon"],
+    "ImagePaths": ["C:\\Users\\Evren Alp\\Pictures\\bronze_sword.jpg"]
   },
   {
-    "ArtifactId": "987",
-    "Name": "987",
-    "Category": "987",
-    "Civilization": "987",
-    "DiscoveryLocation": "987",
-    "Composition": "987",
-    "DiscoveryDate": "987",
-    "CurrentPlace": "987",
+    "ArtifactId": "C987",
+    "Name": "Golden Necklace",
+    "Category": "Jewelry",
+    "Civilization": "Egyptian",
+    "DiscoveryLocation": "Luxor, Egypt",
+    "Composition": "Gold",
+    "DiscoveryDate": "1905-03-12",
+    "CurrentPlace": "Egyptian Museum, Cairo",
     "dimensions": {
-      "Width": 987.0,
-      "Height": 987.0,
-      "Length": 987.0
+      "Width": 15.0,
+      "Height": 0.5,
+      "Length": 20.0
     },
-    "Weight": 987.0,
-    "Tags": ["987"],
-    "ImagePaths": ["C:\\Users\\Evren Alp\\Pictures\\20250105_174328.jpg"]
+    "Weight": 0.75,
+    "Tags": ["gold", "jewelry", "necklace"],
+    "ImagePaths": ["C:\\Users\\Evren Alp\\Pictures\\golden_necklace.jpg"]
   },
   {
-    "ArtifactId": "iste bu be",
-    "Name": "6874",
-    "Category": "684",
-    "Civilization": "654",
-    "DiscoveryLocation": "654",
-    "Composition": "654",
-    "DiscoveryDate": "654",
-    "CurrentPlace": "654",
+    "ArtifactId": "D6874",
+    "Name": "Stone Tablet",
+    "Category": "Inscriptions",
+    "Civilization": "Mesopotamian",
+    "DiscoveryLocation": "Babylon, Iraq",
+    "Composition": "Stone",
+    "DiscoveryDate": "1890-07-08",
+    "CurrentPlace": "Pergamon Museum, Berlin",
     "dimensions": {
-      "Width": 654.0,
-      "Height": 654.0,
-      "Length": 654.0
+      "Width": 50.0,
+      "Height": 75.0,
+      "Length": 10.0
     },
-    "Weight": 654.0,
-    "Tags": ["654"],
-    "ImagePaths": ["C:\\Users\\Evren Alp\\Pictures\\20250105_174328.jpg"]
+    "Weight": 25.0,
+    "Tags": ["tablet", "stone", "inscription"],
+    "ImagePaths": ["C:\\Users\\Evren Alp\\Pictures\\stone_tablet.jpg"]
+  },
+  {
+    "ArtifactId": "D6874",
+    "Name": "Stone Tablet",
+    "Category": "Inscriptions",
+    "Civilization": "Mesopotamian",
+    "DiscoveryLocation": "Babylon, Iraq",
+    "Composition": "Stone",
+    "DiscoveryDate": "1890-07-08",
+    "CurrentPlace": "Pergamon Museum, Berlin",
+    "dimensions": {
+      "Width": 50.0,
+      "Height": 75.0,
+      "Length": 10.0
+    },
+    "Weight": 25.0,
+    "Tags": ["tablet", "stone", "inscription"],
+    "ImagePaths": ["C:\\Users\\Evren Alp\\Pictures\\stone_tablet.jpg"]
+  },
+  {
+    "ArtifactId": "D6874",
+    "Name": "Stone Tablet",
+    "Category": "Inscriptions",
+    "Civilization": "Mesopotamian",
+    "DiscoveryLocation": "Babylon, Iraq",
+    "Composition": "Stone",
+    "DiscoveryDate": "1890-07-08",
+    "CurrentPlace": "Pergamon Museum, Berlin",
+    "dimensions": {
+      "Width": 50.0,
+      "Height": 75.0,
+      "Length": 10.0
+    },
+    "Weight": 25.0,
+    "Tags": ["tablet", "stone", "inscription"],
+    "ImagePaths": ["C:\\Users\\Evren Alp\\Pictures\\stone_tablet.jpg"]
   }
 ]

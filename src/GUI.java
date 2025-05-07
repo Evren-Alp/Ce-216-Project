@@ -40,11 +40,11 @@ public class GUI extends Application {
         // Create the Menu Bar and Items
         // ---------------------------
         MenuBar menu = new MenuBar();
-        MenuItem mOpenFile = new MenuItem("Open File");
+        MenuItem mOpenFile = new MenuItem("Open File");// DOESNT WORK ------------------------------------------------------------------------------
         MenuItem mAbout = new MenuItem("About");
-        MenuItem mNewFile = new MenuItem("New");
+        MenuItem mNewFile = new MenuItem("New");//NO USE -----------------------------------------------------------------
         MenuItem mQuit = new MenuItem("Quit");
-        MenuItem mSave = new MenuItem("Save");
+        MenuItem mSave = new MenuItem("Save selected as JSON");
         Menu mFile = new Menu("File");
         Menu mHelp = new Menu("Help");
 
@@ -314,7 +314,9 @@ public class GUI extends Application {
             if (confirmation.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
                 String oldArtifactID = selected.getArtifactId();
                 artifactList.remove(selected); // Remove from artifactList
-                ArtifactManager.deleteArtifact(oldArtifactID); // Remove from the data source
+                ArtifactManager.deleteArtifact(oldArtifactID);
+                ArtifactManager.exportSelectedArtifactsToJSON(artifactList, "Artifact_Files\\Artifacts.json", false); // Remove from the data source
+                ArtifactManager.exportSelectedArtifactsToJSON(artifactList, "Artifact_Files\\Artifacts.json", false); // Remove from the data source
             }
         });
         Button btnRefresh = new Button("Refresh List");
@@ -327,30 +329,22 @@ public class GUI extends Application {
                 new FileChooser.ExtensionFilter("JSON Files", "*.json")
             );
         
-            // Show the file chooser dialog
             File selectedFile = fileChooser.showOpenDialog(stage);
         
             if (selectedFile != null) {
-                try {
-                    // Read the JSON file 
-                    String jsonContent = Files.readString(selectedFile.toPath());
-                    Alert alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("The program cannot import yet.");
-                    alert.showAndWait();
-        
-                    // Parse the JSON and update the artifactList here
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    Alert alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("File Read Error");
-                    alert.setContentText("Could not read the selected JSON file.");
-                    alert.showAndWait();
-                }
+                List<Artifact> importedArtifacts = FileManager.loadArtifactsFromFile(selectedFile.getAbsolutePath());
+                artifactList.addAll(importedArtifacts);
+                ArtifactManager.exportSelectedArtifactsToJSON(artifactList, "Artifact_Files\\Artifacts.json", false);
+                table.refresh();
+      
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Import Successful");
+                alert.setHeaderText(null);
+                alert.setContentText("Artifacts imported successfully!");
+                alert.showAndWait();
             }
         });
+        
         sidePanel.getChildren().addAll(btnAdd, btnEdit, btnDelete, importJson, btnRefresh);    
         sidePanel.setStyle("-fx-border-color: gray; -fx-border-width: 0 2 0 0; -fx-padding: 10;");
 
