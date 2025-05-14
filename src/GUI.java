@@ -1,4 +1,11 @@
 import java.time.format.DateTimeFormatter;
+import javafx.animation.FadeTransition;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.stage.Popup;
+import javafx.util.Duration;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -9,9 +16,9 @@ import java.time.format.FormatStyle;
 import java.time.LocalDate;
 import java.util.Locale;
 import javafx.util.StringConverter;
-
-
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -28,6 +35,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -68,7 +76,7 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
         MenuItem mAbout = new MenuItem("About");
         MenuItem mNewFile = new MenuItem("New");//NO USE -----------------------------------------------------------------
         MenuItem mQuit = new MenuItem("Quit");
-        MenuItem mSave = new MenuItem("Save selected as JSON");
+        MenuItem mSave = new MenuItem("Save file");
         Menu mFile = new Menu("File");
         Menu mHelp = new Menu("Help");
 
@@ -78,10 +86,11 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
         mQuit.setAccelerator(KeyCombination.keyCombination("ESC"));
         mSave.setOnAction(e -> {
             try {
-                saveFile(stage, textArea);
+                saveFile(stage, ArtifactManager.artifacts);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            
         });
         mSave.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
         mOpenFile.setOnAction(e -> {
@@ -210,28 +219,28 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
 
             final String[] selectedImagePath = {null};  // holds only one image path
 
-ImageView imagePreview = new ImageView();
-imagePreview.setFitWidth(100);
-imagePreview.setFitHeight(100);
-imagePreview.setPreserveRatio(true);
-imagePreview.setStyle("-fx-border-color: gray; -fx-padding: 5;");
+            ImageView imagePreview = new ImageView();
+            imagePreview.setFitWidth(100);
+            imagePreview.setFitHeight(100);
+            imagePreview.setPreserveRatio(true);
+            imagePreview.setStyle("-fx-border-color: gray; -fx-padding: 5;");
 
             
 
             Button chooseImages = new Button("Choose Images");
             chooseImages.setOnAction(ev -> {
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Select Image File");
-    fileChooser.getExtensionFilters().add(
-        new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.jpeg", "*.png", "*.bmp", "*.gif")
-    );
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Select Image File");
+            fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.jpeg", "*.png", "*.bmp", "*.gif")
+            );
 
-    File selectedFile = fileChooser.showOpenDialog(null);
-    if (selectedFile != null) {
-        selectedImagePath[0] = selectedFile.getAbsolutePath();
-        imagePreview.setImage(new Image(selectedFile.toURI().toString()));
-    }
-});
+            File selectedFile = fileChooser.showOpenDialog(null);
+            if (selectedFile != null) {
+                selectedImagePath[0] = selectedFile.getAbsolutePath();
+                imagePreview.setImage(new Image(selectedFile.toURI().toString()));
+            }
+        });
 
 
             
@@ -244,8 +253,7 @@ imagePreview.setStyle("-fx-border-color: gray; -fx-padding: 5;");
             !discoveryLoc.getText().isEmpty() && !composition.getText().isEmpty() && 
             discoveryDatePicker.getValue() != null &&
             !currentPl.getText().isEmpty() && !weight.getText().isEmpty() &&
-            !width.getText().isEmpty() && !height.getText().isEmpty() && !length.getText().isEmpty() && !tags.getText().isEmpty() && selectedImagePath[0] != null
-) {
+            !width.getText().isEmpty() && !height.getText().isEmpty() && !length.getText().isEmpty() && !tags.getText().isEmpty() && selectedImagePath[0] != null) {
                 String[] temp = tags.getText().split(" ");
                 ArrayList<String> taglist = new ArrayList<>();
                 for (String tag : temp) {
@@ -438,7 +446,7 @@ imagePreview.setStyle("-fx-border-color: gray; -fx-padding: 5;");
         mQuit.setAccelerator(KeyCombination.keyCombination("ESC"));
         mSave.setOnAction(e -> {
             try {
-                saveFile(stage, textArea);
+                saveFile(stage, ArtifactManager.artifacts);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -573,28 +581,10 @@ imagePreview.setStyle("-fx-border-color: gray; -fx-padding: 5;");
     helpStage.showAndWait();
     }
 
-    private void saveFile(Stage stage, TextArea tex) throws IOException {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Select file to save!");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
-        
-        Artifact selected = table.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("No Selection");
-            alert.setHeaderText(null);
-            alert.setContentText("Select an artifact to save.");
-            alert.showAndWait();
-            return;
-        }
-        
-        File f = fc.showSaveDialog(stage);
-        if (f != null) {
-            if (!f.getName().endsWith(".json")) {
-                f = new File(f.getAbsolutePath() + ".json");
-            }
-            Files.writeString(f.toPath(), ArtifactManager.artifactToJSON(selected), StandardOpenOption.CREATE);
-        }
+    private void saveFile(Stage stage, ArrayList<Artifact> newArtifact) throws IOException {
+        String filepath = "Artifact_Files\\Artifacts.json";
+        ArtifactManager.exportSelectedArtifactsToJSON(newArtifact, filepath, true);
+        showToast(stage, "Artifacts saved successfully!");
     }
 
     private void openFile(Stage stage, TextArea textArea) throws IOException {
@@ -603,6 +593,31 @@ imagePreview.setStyle("-fx-border-color: gray; -fx-padding: 5;");
         File f = fc.showOpenDialog(stage);
         textArea.setText(Files.readString(f.toPath()));
     }
+
+    private void showToast(Stage stage, String message) {
+        Popup popup = new Popup();
+
+        Label label = new Label(message);
+        label.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-padding: 10px; -fx-background-radius: 5;");
+        label.setFont(new Font(14));
+        label.setOpacity(0.9);
+
+        popup.getContent().add(label);
+        popup.setAutoHide(true);
+
+        // Position the popup in the center of the stage
+        popup.show(stage);
+        popup.setX(stage.getX() + (stage.getWidth() / 2) - (label.getWidth() / 2)); // Center horizontally
+        popup.setY(stage.getY() + (stage.getHeight() / 2) - (label.getHeight() / 2)); // Center vertically
+
+        // Fade out the popup after 2 seconds
+        FadeTransition fade = new FadeTransition(Duration.seconds(2), label);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.0);
+        fade.setOnFinished(e -> popup.hide());
+        fade.play();
+    }
+
     private void refreshTable() {
         {
             

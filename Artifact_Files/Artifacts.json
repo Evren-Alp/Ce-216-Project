@@ -142,5 +142,59 @@
     "Weight": 654.0,
     "Tags": ["654"],
     "ImagePaths": ["D:\\Downloads\\clap.gif"]
+  },
+  {
+    "ArtifactId": "987",
+    "Name": "69867",
+    "Category": "987",
+    "Civilization": "987",
+    "DiscoveryLocation": "987",
+    "Composition": "987",
+    "DiscoveryDate": "02-05-2025",
+    "CurrentPlace": "564",
+    "dimensions": {
+      "Width": 654.0,
+      "Height": 654.0,
+      "Length": 654.0
+    },
+    "Weight": 654.0,
+    "Tags": ["654"],
+    "ImagePaths": ["D:\\Downloads\\beto.png"]
+  },
+  {
+    "ArtifactId": "94",
+    "Name": "219451",
+    "Category": "654",
+    "Civilization": "654",
+    "DiscoveryLocation": "654",
+    "Composition": "654",
+    "DiscoveryDate": "03-05-2025",
+    "CurrentPlace": "654",
+    "dimensions": {
+      "Width": 654.0,
+      "Height": 654.0,
+      "Length": 654.0
+    },
+    "Weight": 654.0,
+    "Tags": ["654"],
+    "ImagePaths": ["D:\\Downloads\\ball.jpg"]
+  },
+  {
+    "ArtifactId": "984",
+    "Name": "954",
+    "Category": "984",
+    "Civilization": "984",
+    "DiscoveryLocation": "984",
+    "Composition": "984",
+    "DiscoveryDate": "08-05-2025",
+    "CurrentPlace": "9854",
+    "dimensions": {
+      "Width": 984.0,
+      "Height": 984.0,
+      "Length": 984.0
+    },
+    "Weight": 984.0,
+    "Tags": ["984"],
+    "ImagePaths": ["D:\\Downloads\\B1pppR4gVKL._CLa_2140", "2000_71e8W83MFUL.png_0", "0", "2140", "2000+0.0", "0.0", "2140.0", "2000.0_AC_SX466_.jpg"]
   }
 ]
