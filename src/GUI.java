@@ -1,8 +1,15 @@
+import java.time.format.DateTimeFormatter;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.LocalDate;
+import java.util.Locale;
+import javafx.util.StringConverter;
+
 
 import javafx.application.Application;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -33,6 +40,23 @@ public class GUI extends Application {
     
     // TableView to display artifacts
     private TableView<Artifact> table = new TableView<>();
+
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConverter<>() {
+    @Override
+    public String toString(LocalDate date) {
+        return (date != null) ? DATE_FORMATTER.format(date) : "";
+    }
+
+    @Override
+    public LocalDate fromString(String string) {
+        return (string != null && !string.isEmpty()) ? LocalDate.parse(string, DATE_FORMATTER) : null;
+    }
+};
+
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -150,6 +174,8 @@ public class GUI extends Application {
             artifactStage.setTitle("Add Artifact");
             VBox artifactLayout = new VBox(10);
             artifactLayout.setPadding(new Insets(10));
+
+            
             
             // Create text fields for artifact properties
             TextField artifactName = new TextField();
@@ -164,8 +190,11 @@ public class GUI extends Application {
             discoveryLoc.setPromptText("Discovery Location");
             TextField composition = new TextField();
             composition.setPromptText("Composition");
-            TextField discoveryDate = new TextField();
-            discoveryDate.setPromptText("Discovery Date");
+            DatePicker discoveryDatePicker = new DatePicker();
+            discoveryDatePicker.setPromptText("dd-MM-yyyy");
+            discoveryDatePicker.setConverter(DATE_CONVERTER);
+
+
             TextField currentPl = new TextField();
             currentPl.setPromptText("Current Place");
             TextField weight = new TextField();
@@ -178,8 +207,34 @@ public class GUI extends Application {
             length.setPromptText("Length");
             TextField tags = new TextField();
             tags.setPromptText("Tags");
-            TextField imagePaths = new TextField();
-            imagePaths.setPromptText("Image paths separated by \",\"");
+
+            final String[] selectedImagePath = {null};  // holds only one image path
+
+ImageView imagePreview = new ImageView();
+imagePreview.setFitWidth(100);
+imagePreview.setFitHeight(100);
+imagePreview.setPreserveRatio(true);
+imagePreview.setStyle("-fx-border-color: gray; -fx-padding: 5;");
+
+            
+
+            Button chooseImages = new Button("Choose Images");
+            chooseImages.setOnAction(ev -> {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Select Image File");
+    fileChooser.getExtensionFilters().add(
+        new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.jpeg", "*.png", "*.bmp", "*.gif")
+    );
+
+    File selectedFile = fileChooser.showOpenDialog(null);
+    if (selectedFile != null) {
+        selectedImagePath[0] = selectedFile.getAbsolutePath();
+        imagePreview.setImage(new Image(selectedFile.toURI().toString()));
+    }
+});
+
+
+            
 
             
             Button saveButton = new Button("Save");
@@ -187,21 +242,22 @@ public class GUI extends Application {
             if (!artifactID.getText().isEmpty() && !artifactName.getText().isEmpty() &&
             !category.getText().isEmpty() && !civilization.getText().isEmpty() && 
             !discoveryLoc.getText().isEmpty() && !composition.getText().isEmpty() && 
-            !discoveryDate.getText().isEmpty() && !currentPl.getText().isEmpty() && !weight.getText().isEmpty() &&
-            !width.getText().isEmpty() && !height.getText().isEmpty() && !length.getText().isEmpty() && !tags.getText().isEmpty() && !imagePaths.getText().isEmpty()) {
+            discoveryDatePicker.getValue() != null &&
+            !currentPl.getText().isEmpty() && !weight.getText().isEmpty() &&
+            !width.getText().isEmpty() && !height.getText().isEmpty() && !length.getText().isEmpty() && !tags.getText().isEmpty() && selectedImagePath[0] != null
+) {
                 String[] temp = tags.getText().split(" ");
                 ArrayList<String> taglist = new ArrayList<>();
                 for (String tag : temp) {
                     taglist.add(tag.trim());
                 }
-                List<String> imagePathsList = new ArrayList<>();
-                for(String path : imagePaths.getText().split(",")) {
-                    imagePathsList.add(path.trim());
-                }
+                List<String> imagePathsList = List.of(selectedImagePath[0]);
+
                 Artifact artifact = new Artifact(artifactID.getText(), artifactName.getText(),
                                          category.getText(), civilization.getText(), 
                                     discoveryLoc.getText(), composition.getText(), 
-                                 discoveryDate.getText(), currentPl.getText(),
+                                 discoveryDatePicker.getValue().format(DATE_FORMATTER),
+                                currentPl.getText(),
                              Double.parseDouble(weight.getText()), Double.parseDouble(width.getText()),
                         Double.parseDouble(height.getText()), Double.parseDouble(length.getText()), taglist, imagePathsList);
                 
@@ -225,8 +281,8 @@ public class GUI extends Application {
             
             artifactLayout.getChildren().addAll(
                 artifactName, artifactID, category, civilization, discoveryLoc,
-                composition, discoveryDate, currentPl, weight, width,
-                height, length, tags, imagePaths, saveButton
+                composition, discoveryDatePicker, currentPl, weight, width,
+                height, length, tags, chooseImages, imagePreview, saveButton
             );
             
             Scene artifactScene = new Scene(artifactLayout, 300, 600);
@@ -257,7 +313,17 @@ public class GUI extends Application {
             TextField civilizationField = new TextField(selected.getCivilization());
             TextField discoveryLocField = new TextField(selected.getDiscoveryLocation());
             TextField compositionField = new TextField(selected.getComposition());
-            TextField discoveryDateField = new TextField(selected.getDiscoveryDate());
+            DatePicker discoveryDatePicker = new DatePicker();
+            discoveryDatePicker.setPromptText("dd-MM-yyyy");
+            discoveryDatePicker.setConverter(DATE_CONVERTER);
+
+            try {
+                discoveryDatePicker.setValue(LocalDate.parse(selected.getDiscoveryDate(), DATE_FORMATTER));
+            } catch (Exception ev) {
+            discoveryDatePicker.setValue(null);
+            }
+
+
             TextField currentPlField = new TextField(selected.getCurrentPlace());
             TextField weightField = new TextField(String.valueOf(selected.getWeight()));
             TextField widthField = new TextField(String.valueOf(selected.getWidth()));
@@ -272,7 +338,11 @@ public class GUI extends Application {
                 selected.setCivilization(civilizationField.getText());
                 selected.setDiscoveryLocation(discoveryLocField.getText());
                 selected.setComposition(compositionField.getText());
-                selected.setDiscoveryDate(discoveryDateField.getText());
+                if (discoveryDatePicker.getValue() != null) {
+                    selected.setDiscoveryDate(discoveryDatePicker.getValue().format(DATE_FORMATTER));
+                }
+
+
                 selected.setCurrentPlace(currentPlField.getText());
                 selected.setWeight(Double.parseDouble(weightField.getText()));
                 selected.setWidth(Double.parseDouble(widthField.getText()));
@@ -287,7 +357,7 @@ public class GUI extends Application {
                 editStage.close();
             });
             ;
-            editLayout.getChildren().addAll(artifactIDField, artifactNameField, categoryField, civilizationField, discoveryLocField, compositionField, discoveryDateField, currentPlField, weightField, widthField, heightField, lengthField, tagsField, saveEditButton);
+            editLayout.getChildren().addAll(artifactIDField, artifactNameField, categoryField, civilizationField, discoveryLocField, compositionField, discoveryDatePicker, currentPlField, weightField, widthField, heightField, lengthField, tagsField, saveEditButton);
             Scene editScene = new Scene(editLayout, 300, 600);
             editStage.setScene(editScene);
             editStage.initModality(Modality.APPLICATION_MODAL);

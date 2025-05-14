@@ -6,7 +6,7 @@
     "Civilization": "Greek",
     "DiscoveryLocation": "Athens, Greece",
     "Composition": "Clay",
-    "DiscoveryDate": "1923-05-14",
+    "DiscoveryDate": "14-05-1923",
     "CurrentPlace": "National Archaeological Museum, Athens",
     "dimensions": {
       "Width": 25.4,
@@ -24,7 +24,7 @@
     "Civilization": "Roman",
     "DiscoveryLocation": "Pompeii, Italy",
     "Composition": "Bronze",
-    "DiscoveryDate": "1878-09-21",
+    "DiscoveryDate": "21-09-1878",
     "CurrentPlace": "British Museum, London",
     "dimensions": {
       "Width": 5.0,
@@ -42,7 +42,7 @@
     "Civilization": "Egyptian",
     "DiscoveryLocation": "Luxor, Egypt",
     "Composition": "Gold",
-    "DiscoveryDate": "1905-03-12",
+    "DiscoveryDate": "12-03-1905",
     "CurrentPlace": "Egyptian Museum, Cairo",
     "dimensions": {
       "Width": 15.0,
@@ -60,7 +60,7 @@
     "Civilization": "Mesopotamian",
     "DiscoveryLocation": "Babylon, Iraq",
     "Composition": "Stone",
-    "DiscoveryDate": "1890-07-08",
+    "DiscoveryDate": "08-07-1890",
     "CurrentPlace": "Pergamon Museum, Berlin",
     "dimensions": {
       "Width": 50.0,
@@ -78,7 +78,7 @@
     "Civilization": "Mesopotamian",
     "DiscoveryLocation": "Babylon, Iraq",
     "Composition": "Stone",
-    "DiscoveryDate": "1890-07-08",
+    "DiscoveryDate": "08-07-1890",
     "CurrentPlace": "Pergamon Museum, Berlin",
     "dimensions": {
       "Width": 50.0,
@@ -96,7 +96,7 @@
     "Civilization": "Mesopotamian",
     "DiscoveryLocation": "Babylon, Iraq",
     "Composition": "Stone",
-    "DiscoveryDate": "1890-07-08",
+    "DiscoveryDate": "08-07-1890",
     "CurrentPlace": "Pergamon Museum, Berlin",
     "dimensions": {
       "Width": 50.0,
@@ -106,5 +106,41 @@
     "Weight": 25.0,
     "Tags": ["tablet", "stone", "inscription"],
     "ImagePaths": ["C:\\Users\\Evren Alp\\Pictures\\stone_tablet.jpg"]
+  },
+  {
+    "ArtifactId": "654",
+    "Name": "654",
+    "Category": "654",
+    "Civilization": "654",
+    "DiscoveryLocation": "654",
+    "Composition": "6544",
+    "DiscoveryDate": "05-02-2025",
+    "CurrentPlace": "654",
+    "dimensions": {
+      "Width": 654.0,
+      "Height": 654.0,
+      "Length": 654.0
+    },
+    "Weight": 654.0,
+    "Tags": ["654"],
+    "ImagePaths": ["D:\\Desktop\\foto\\_MG_5791.JPG"]
+  },
+  {
+    "ArtifactId": "654",
+    "Name": "654",
+    "Category": "654",
+    "Civilization": "6546",
+    "DiscoveryLocation": "546",
+    "Composition": "54654",
+    "DiscoveryDate": "01-05-2025",
+    "CurrentPlace": "54",
+    "dimensions": {
+      "Width": 65465.0,
+      "Height": 4654.0,
+      "Length": 654.0
+    },
+    "Weight": 654.0,
+    "Tags": ["654"],
+    "ImagePaths": ["D:\\Downloads\\clap.gif"]
   }
 ]
