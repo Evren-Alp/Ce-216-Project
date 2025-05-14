@@ -134,17 +134,20 @@ class FileManager{
     
     
     private static List<String> extractList(String json, String key) {
-        List<String> list = new ArrayList<>();
-        String pattern = "\"" + key + "\":\\s*\\[(.*?)\\]";
-        if (json.matches("(?s).*" + pattern + ".*")) {
-            String inner = json.replaceAll("(?s).*" + pattern + ".*", "$1");
-            String[] items = inner.split(",");
-            for (String item : items) {
-                list.add(item.trim().replaceAll("^\"|\"$", "").replace("\\\\", "\\"));
-            }
+    List<String> list = new ArrayList<>();
+    String pattern = "\"" + key + "\":\\s*\\[(.*?)\\]";
+    if (json.matches("(?s).*" + pattern + ".*")) {
+        String inner = json.replaceAll("(?s).*" + pattern + ".*", "$1");
+
+       
+        Matcher matcher = Pattern.compile("\"(.*?)\"").matcher(inner);
+        while (matcher.find()) {
+            list.add(matcher.group(1).replace("\\\\", "\\")); 
         }
-        return list;
     }
+    return list;
+}
+
     
 
     public Artifact getArtifact(){
