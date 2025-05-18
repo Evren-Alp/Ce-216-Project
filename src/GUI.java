@@ -537,6 +537,7 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
     // Helper method to set up the TableView columns
     private void setupArtifactTable() {
         TableColumn<Artifact, ImageView> colImage = new TableColumn<>("Image");
+
         colImage.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getImageView()));
         colImage.setCellFactory(col -> new TableCell<Artifact, ImageView>() {
             @Override
@@ -584,6 +585,64 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
             for (TableColumn<?, ?> col : table.getColumns()) {
                 col.setPrefWidth(totalWidth / columnCount);
             }
+        });
+        table.setRowFactory(tv -> {
+            TableRow<Artifact> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+            if (!row.isEmpty() && event.getClickCount() == 2) {
+                Artifact artifact = row.getItem();
+                StringBuilder details = new StringBuilder();
+                details.append("ID: ").append(artifact.getArtifactId()).append("\n");
+                details.append("Name: ").append(artifact.getName()).append("\n");
+                details.append("Category: ").append(artifact.getCategory()).append("\n");
+                details.append("Civilization: ").append(artifact.getCivilization()).append("\n");
+                details.append("Discovery Location: ").append(artifact.getDiscoveryLocation()).append("\n");
+                details.append("Composition: ").append(artifact.getComposition()).append("\n");
+                details.append("Discovery Date: ").append(artifact.getDiscoveryDate()).append("\n");
+                details.append("Current Place: ").append(artifact.getCurrentPlace()).append("\n");
+                details.append("Weight: ").append(artifact.getWeight()).append("\n");
+                details.append("Width: ").append(artifact.getWidth()).append("\n");
+                details.append("Height: ").append(artifact.getHeight()).append("\n");
+                details.append("Length: ").append(artifact.getLength()).append("\n");
+                details.append("Tags: ").append(artifact.getTags() == null ? "" : String.join(", ", artifact.getTags())).append("\n");
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Artifact Details");
+                alert.setHeaderText("Details for Artifact: " + artifact.getName());
+                alert.setContentText(details.toString());
+
+                if (artifact.getImageView() != null && artifact.getImageView().getImage() != null) {
+                ImageView imageView = new ImageView(artifact.getImageView().getImage());
+                imageView.setFitWidth(150);
+                imageView.setFitHeight(150);
+                imageView.setPreserveRatio(true);
+                alert.setGraphic(imageView);
+                }
+                if (artifact.getImageView() != null && artifact.getImageView().getImage() != null) {
+                    ImageView imageView = new ImageView(artifact.getImageView().getImage());
+                    imageView.setFitWidth(150);
+                    imageView.setFitHeight(150);
+                    imageView.setPreserveRatio(true);
+                    alert.setGraphic(imageView);
+
+                    imageView.setOnMouseClicked(ev -> {
+                        Stage imgStage = new Stage();
+                        imgStage.setTitle("Artifact Image");
+                        ImageView fullImage = new ImageView(artifact.getImageView().getImage());
+                        fullImage.setPreserveRatio(true);
+                        fullImage.setFitWidth(600);
+                        fullImage.setFitHeight(600);
+                        StackPane pane = new StackPane(fullImage);
+                        Scene imgScene = new Scene(pane, 600, 600);
+                        imgStage.setScene(imgScene);
+                        imgStage.initModality(Modality.APPLICATION_MODAL);
+                        imgStage.showAndWait();
+                    });
+                }
+                alert.showAndWait();
+            }
+            });
+            return row;
         });
 
         refreshTable();
