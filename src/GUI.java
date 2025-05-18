@@ -9,12 +9,14 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javafx.util.StringConverter;
 import javafx.animation.FadeTransition;
@@ -26,6 +28,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -33,6 +36,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -80,6 +84,7 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
         MenuItem mSave = new MenuItem("Save file");
         Menu mFile = new Menu("File");
         Menu mHelp = new Menu("Help");
+        Menu msaveSelected = new Menu("Save Selected Artifact to JSON");
 
         mNewFile.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
         //mNewFile.setOnAction(e -> newFile(textArea));
@@ -101,10 +106,33 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
                 ex.printStackTrace();
             }
         });
+        msaveSelected.setOnAction(e -> {
+            Artifact selected = table.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("No Selection");
+            alert.setHeaderText(null);
+            alert.setContentText("Select an artifact to save.");
+            alert.showAndWait();
+            return;
+            }
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Selected Artifact As");
+            fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("JSON Files", "*.json")
+            );
+            File file = fileChooser.showSaveDialog(stage);
+            if (file != null) {
+            List<Artifact> selectedArtifacts = new ArrayList<>();
+            selectedArtifacts.add(selected);
+            ArtifactManager.exportSelectedArtifactsToJSON(selectedArtifacts, file.getAbsolutePath(), true);
+            }
+        });
+        msaveSelected.setAccelerator(KeyCombination.keyCombination("Ctrl+Shift+S"));
         mOpenFile.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
         mAbout.setOnAction(e -> aboutText());
         mHelp.getItems().addAll(mAbout);
-        mFile.getItems().addAll(mNewFile, mOpenFile, mSave, mQuit);
+        mFile.getItems().addAll(mSave, msaveSelected, mQuit);
         menu.getMenus().addAll(mFile, mHelp);
 
 
@@ -218,6 +246,57 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
             length.setPromptText("Length");
             TextField tags = new TextField();
             tags.setPromptText("Tags");
+            
+            TextField tagsTextField = new TextField();
+            tagsTextField.setPromptText("Enter tags...");
+
+            Button dropdownBtn = new Button("▼");
+            dropdownBtn.setFocusTraversable(false);
+            dropdownBtn.setMinWidth(30);
+
+            HBox tagsInputRow = new HBox(5, tagsTextField, dropdownBtn);
+            tagsInputRow.setAlignment(Pos.CENTER_LEFT);
+
+            String[] predefinedTags = {
+                "hellenistic", "neoclassical", "contemporary",
+                "sword", "bow", "axe",
+                "necklace", "ring"
+            };
+
+
+            FlowPane dropdownBox = new FlowPane(5, 5);
+            dropdownBox.setPadding(new Insets(8));
+            dropdownBox.setVisible(false);
+            dropdownBox.setManaged(false);
+            dropdownBox.setStyle("-fx-background-color: #f7f7f7; -fx-border-color: #cccccc; -fx-border-radius: 4; -fx-background-radius: 4;");
+
+            for (String tag : predefinedTags) {
+                Button tagBtn = new Button(tag);
+                tagBtn.setStyle("-fx-background-color: #e0e0e0; -fx-border-radius: 15; -fx-background-radius: 15;");
+                tagBtn.setOnAction(ef -> {
+                    String current = tagsTextField.getText().trim();
+                    List<String> tagList = Arrays.stream(current.split(","))
+                            .map(String::trim)
+                            .filter(s -> !s.isEmpty())
+                            .collect(Collectors.toList());
+
+                    if (!tagList.contains(tag)) {
+                        tagList.add(tag);
+                        tagsTextField.setText(String.join(", ", tagList));
+                    }
+                });
+                dropdownBox.getChildren().add(tagBtn);
+            }
+
+            dropdownBtn.setOnAction(er-> {
+                boolean show = !dropdownBox.isVisible();
+                dropdownBox.setVisible(show);
+                dropdownBox.setManaged(show);
+            });
+
+            VBox tagsInputWithDropdown = new VBox(5, tagsInputRow, dropdownBox);
+            tagsInputWithDropdown.setAlignment(Pos.TOP_LEFT);
+
 
             final String[] selectedImagePath = {null};  // holds only one image path
 
@@ -359,7 +438,7 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
             artifactLayout.getChildren().addAll(
                 artifactName, artifactID, category, civilization, discoveryLoc,
                 composition, discoveryDatePicker, currentPl, weight, width,
-                height, length, tags, chooseImages, imagePreview, saveButton
+                height, length, tagsInputWithDropdown, chooseImages, imagePreview, saveButton
             );
             
             Scene artifactScene = new Scene(scrollPane, 300, 600);
@@ -705,10 +784,9 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
         "7. Double click on any desired artifact to see its information. You can also click on its image on the newly opened window to expand it.\n" +
         "8. Use the 'Import from JSON' button to import artifacts from a JSON file.\n" +
         "9. Use the 'Refresh List' button to refresh the artifacts table being show on the main screen.\n" +
-        "10. Use 'Open file' from 'File' on the menu bar to open a JSON file and display its content on the table.You can also use the shortcut \"Ctrl+O\"\n" +
-        "11. Use 'Save file' from 'File' on the menu bar to save the current artifacts to a JSON file. You can also use the shortcut \"Ctrl+S\"\n" +
-        "12. Use 'Quit' from 'File' on the menu bar to close the application. You can also use the shortcut \"Escape\"\n" +
-        "13. Use 'Help' from the menu bar to see this help page. \n\n" +
+        "10. Use 'Save file' from 'File' on the menu bar to save the current artifacts to a JSON file. You can also use the shortcut \"Ctrl+S\"\n" +
+        "11. Use 'Quit' from 'File' on the menu bar to close the application. You can also use the shortcut \"Escape\"\n" +
+        "12. Use 'Help' from the menu bar to see this help page. \n\n" +
         "For more information, please refer to the documentation or contact support.");
 
     Button closeButton = new Button("Close");

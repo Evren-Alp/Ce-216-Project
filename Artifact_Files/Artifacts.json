@@ -70,41 +70,5 @@
     "Weight": 25.0,
     "Tags": ["tablet", "stone", "inscription"],
     "ImagePaths": ["Artifact_Images/default_pengu.png"]
-  },
-  {
-    "ArtifactId": "D6874",
-    "Name": "Stone Tablet",
-    "Category": "Inscriptions",
-    "Civilization": "Mesopotamian",
-    "DiscoveryLocation": "Babylon, Iraq",
-    "Composition": "Stone",
-    "DiscoveryDate": "08-07-1890",
-    "CurrentPlace": "Pergamon Museum, Berlin",
-    "dimensions": {
-      "Width": 50.0,
-      "Height": 75.0,
-      "Length": 10.0
-    },
-    "Weight": 25.0,
-    "Tags": ["tablet", "stone", "inscription"],
-    "ImagePaths": ["Artifact_Images/default_pengu.png"]
-  },
-  {
-    "ArtifactId": "D6874",
-    "Name": "Stone Tablet",
-    "Category": "Inscriptions",
-    "Civilization": "Mesopotamian",
-    "DiscoveryLocation": "Babylon, Iraq",
-    "Composition": "Stone",
-    "DiscoveryDate": "08-07-1890",
-    "CurrentPlace": "Pergamon Museum, Berlin",
-    "dimensions": {
-      "Width": 50.0,
-      "Height": 75.0,
-      "Length": 10.0
-    },
-    "Weight": 25.0,
-    "Tags": ["tablet", "stone", "inscription"],
-    "ImagePaths": ["Artifact_Images/default_pengu.png"]
   }
- ]
+]
