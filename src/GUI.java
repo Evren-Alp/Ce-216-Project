@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.LocalDate;
 import java.util.Locale;
+import java.util.Optional;
+
 import javafx.util.StringConverter;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
@@ -325,8 +327,25 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
                     Artifact artifact = new Artifact(txtid, txtname, txtctg, txtciv, txtdiscloc, txtcomp, txtdate, txtcurrpl, txtweight,
                                                         txtwidth, txtheight, txtlenght, taglist, imagePathsList);
 
+                    
+                    boolean isDuplicate = false;
+                    for (Artifact art : artifactList) {
+                        if (art.getArtifactId().equals(artifact.getArtifactId())) {
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+                    if(isDuplicate) {
+                        Alert alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Artifact ID already exists.");
+                        alert.showAndWait();
+                        return;
+                    }
                     artifactList.add(artifact);
                     ArtifactManager.addArtifact(artifact);
+                    
                     
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Success");
@@ -669,26 +688,35 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
     helpLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
     TextArea helpContent = new TextArea();
-    helpContent.setPrefHeight(250); // Set preferred height
-    helpContent.setPrefWidth(350);  // Set preferred width
+    helpContent.setPrefHeight(500); // Set preferred height
+    helpContent.setPrefWidth(400);  // Set preferred width
     helpContent.setEditable(false);
     helpContent.setWrapText(true);
     helpContent.setText(
         "Welcome to the Artifact Manager Help Page.\n\n" +
-        "1. To add an artifact, click the 'Add Artifact' button on the left panel.\n" +
-        "2. To edit an artifact, select it from the table and click 'Edit Selected'.\n" +
-        "3. To delete an artifact, select it from the table and click 'Delete Selected'.\n" +
-        "4. Use the 'Search' field to search for artifacts by name, ID, or other properties.\n" +
-        "5. Use the 'Filter by tag' field to filter artifacts by tags. Use space between tags if you want to search by multiple tags.\n" +
-        "6. 'Import from JSON' doesn't work yet. You can select your file but it won't add the artifacts to the table. \n" 
-    );
+        "This application allows you to manage artifacts, including adding, editing, deleting, and searching for them.\n" +
+        "Here are some instructions to help you get started:\n\n" +
+        "1. Artifacts are saved in \"\\Artifact_Files\\Artifacts.json\".\n" +
+        "2. To add an artifact, click the 'Add Artifact' button on the left panel.\n" +
+        "3. To edit an artifact, select it on the table and click 'Edit Selected'.\n" +
+        "4. To delete an artifact, select it on the table and click 'Delete Selected'.\n" +
+        "5. Use the 'Search' field to search for artifacts by name, ID, or other properties.\n" +
+        "6. Use the 'Filter by tag' field to filter artifacts by tags. Use space between tags if you want to search by multiple tags.\n" +
+        "7. Double click on any desired artifact to see its information. You can also click on its image on the newly opened window to expand it.\n" +
+        "8. Use the 'Import from JSON' button to import artifacts from a JSON file.\n" +
+        "9. Use the 'Refresh List' button to refresh the artifacts table being show on the main screen.\n" +
+        "10. Use 'Open file' from 'File' on the menu bar to open a JSON file and display its content on the table.You can also use the shortcut \"Ctrl+O\"\n" +
+        "11. Use 'Save file' from 'File' on the menu bar to save the current artifacts to a JSON file. You can also use the shortcut \"Ctrl+S\"\n" +
+        "12. Use 'Quit' from 'File' on the menu bar to close the application. You can also use the shortcut \"Escape\"\n" +
+        "13. Use 'Help' from the menu bar to see this help page. \n\n" +
+        "For more information, please refer to the documentation or contact support.");
 
     Button closeButton = new Button("Close");
     closeButton.setOnAction(e -> helpStage.close());
 
     helpLayout.getChildren().addAll(helpLabel, helpContent, closeButton);
 
-    Scene helpScene = new Scene(helpLayout, 400, 400);
+    Scene helpScene = new Scene(helpLayout, 450, 600);
     helpStage.setScene(helpScene);
     helpStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with other windows
     helpStage.showAndWait();
@@ -736,10 +764,44 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
             
             artifactList.clear();
             List<Artifact> arr =  FileManager.loadArtifactsFromFile("Artifact_Files\\Artifacts.json");
+            boolean isOkayWithDeletingDups = false;
             for (Artifact art : arr) {
+                boolean isDuplicate = false;
+                // Check if the artifact ID already exists in the list
+                for (Artifact existingArtifact : artifactList) {
+                    if (existingArtifact.getArtifactId().equals(art.getArtifactId())) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+                // If it's a duplicate and the user is not okay with deleting duplicates, show an alert
+                if (isDuplicate && !isOkayWithDeletingDups) {
+                    Alert deletionAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    deletionAlert.setTitle("Duplicate Artifact IDs Found");
+                    deletionAlert.setHeaderText(null);
+                    deletionAlert.setContentText("Delete the duplicate artifacts?");
+                    deletionAlert.setResizable(false);
+                    Optional<ButtonType> result = deletionAlert.showAndWait();
+                    if(result.isPresent() && result.get() == ButtonType.OK){
+                        isOkayWithDeletingDups = true;
+                        continue; // Skip adding this artifact if it's a duplicate
+                    }
+                    else{
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Exit");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Can not have Artifacts with the same IDs. Terminating program.");
+                        alert.showAndWait();
+                        System.exit(0);
+                    }
+                }
+                // If it's a duplicate and the user is okay with deleting duplicates, skip adding it
+                if(isDuplicate && isOkayWithDeletingDups) {
+                    continue;
+                }
                 artifactList.add(art);
-                
             }
+            ArtifactManager.overwriteArtifacts(artifactList, "Artifact_Files\\Artifacts.json");
             table.refresh();
         }
     }
