@@ -624,7 +624,14 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
                     imageView.setFitHeight(150);
                     imageView.setPreserveRatio(true);
                     alert.setGraphic(imageView);
-
+                    DialogPane dialogPane = alert.getDialogPane();
+                    dialogPane.setStyle("-fx-font-size: 20px;");
+                    if (dialogPane.getContent() instanceof Label) {
+                        ((Label) dialogPane.getContent()).setStyle("-fx-font-size: 20px;");
+                    }
+                    if (dialogPane.getContent() instanceof TextArea) {
+                        ((TextArea) dialogPane.getContent()).setStyle("-fx-font-size: 20px;");
+                    }
                     imageView.setOnMouseClicked(ev -> {
                         Stage imgStage = new Stage();
                         imgStage.setTitle("Artifact Image");
