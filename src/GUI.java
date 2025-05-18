@@ -1,6 +1,5 @@
 import java.time.format.DateTimeFormatter;
 import javafx.animation.FadeTransition;
-import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -182,7 +181,10 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
             Stage artifactStage = new Stage();
             artifactStage.setTitle("Add Artifact");
             VBox artifactLayout = new VBox(10);
+            // Add scrolling to the artifact layout
             artifactLayout.setPadding(new Insets(10));
+            ScrollPane scrollPane = new ScrollPane(artifactLayout);
+            scrollPane.setFitToWidth(true);
 
             
             
@@ -202,8 +204,6 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
             DatePicker discoveryDatePicker = new DatePicker();
             discoveryDatePicker.setPromptText("dd-MM-yyyy");
             discoveryDatePicker.setConverter(DATE_CONVERTER);
-
-
             TextField currentPl = new TextField();
             currentPl.setPromptText("Current Place");
             TextField weight = new TextField();
@@ -248,43 +248,93 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
             
             Button saveButton = new Button("Save");
             saveButton.setOnAction(event -> {
-            if (!artifactID.getText().isEmpty() && !artifactName.getText().isEmpty() &&
-            !category.getText().isEmpty() && !civilization.getText().isEmpty() && 
-            !discoveryLoc.getText().isEmpty() && !composition.getText().isEmpty() && 
-            discoveryDatePicker.getValue() != null &&
-            !currentPl.getText().isEmpty() && !weight.getText().isEmpty() &&
-            !width.getText().isEmpty() && !height.getText().isEmpty() && !length.getText().isEmpty() && !tags.getText().isEmpty() && selectedImagePath[0] != null) {
-                String[] temp = tags.getText().split(" ");
-                ArrayList<String> taglist = new ArrayList<>();
-                for (String tag : temp) {
-                    taglist.add(tag.trim());
-                }
-                List<String> imagePathsList = List.of(selectedImagePath[0]);
+                String txtname;
+                String txtid;
+                String txtctg;
+                String txtciv;
+                String txtdiscloc;
+                String txtcomp;
+                String txtdate;
+                String txtcurrpl;
+                double txtweight;
+                double txtwidth;
+                double txtheight;
+                double txtlenght;
+                String txttags;
+                if(artifactID.getText().isEmpty()) txtid = "Null";
+                else txtid = artifactID.getText();
 
-                Artifact artifact = new Artifact(artifactID.getText(), artifactName.getText(),
-                                         category.getText(), civilization.getText(), 
-                                    discoveryLoc.getText(), composition.getText(), 
-                                 discoveryDatePicker.getValue().format(DATE_FORMATTER),
-                                currentPl.getText(),
-                             Double.parseDouble(weight.getText()), Double.parseDouble(width.getText()),
-                        Double.parseDouble(height.getText()), Double.parseDouble(length.getText()), taglist, imagePathsList);
+                if(artifactName.getText().isEmpty()) txtname = "Null";
+                else txtname = artifactName.getText();
+
+                if(category.getText().isEmpty()) txtctg = "Null";
+                else txtctg = category.getText();
+
+                if(civilization.getText().isEmpty()) txtciv = "Null";
+                else txtciv = civilization.getText();
+
+                if(discoveryLoc.getText().isEmpty()) txtdiscloc = "Null";
+                else txtdiscloc = discoveryLoc.getText();
+
+                if(discoveryDatePicker.getValue() == null) txtdate = "Null";
+                else txtdate = discoveryDatePicker.getValue().format(DATE_FORMATTER);
+
+                if(composition.getText().isEmpty()) txtcomp = "Null";
+                else txtcomp = composition.getText();
                 
-                artifactList.add(artifact);
-                ArtifactManager.addArtifact(artifact);
+                if(currentPl.getText().isEmpty()) txtcurrpl = "Null";
+                else txtcurrpl = currentPl.getText();
+
+                if(weight.getText().isEmpty()) txtweight = 0;
+                else txtweight = Integer.parseInt(weight.getText());
+
+                if(width.getText().isEmpty()) txtwidth = 0;
+                else txtwidth = Integer.parseInt(width.getText()); 
+
+                if(height.getText().isEmpty()) txtheight = 0;
+                else txtheight = Integer.parseInt(height.getText());
+
+                if(length.getText().isEmpty()) txtlenght = 0;
+                else txtlenght = Integer.parseInt(length.getText());
+
+                if(tags.getText().isEmpty()) txttags = "NULL";
+                else txttags = tags.getText();
+                        String[] temp = txttags.split(" ");
+                         ArrayList<String> taglist = new ArrayList<>();
+                         for (String tag : temp) {
+                            taglist.add(tag.trim());
+                         }
+
+                List<String> imagePathsList;
+                if (selectedImagePath[0] == null) {
+                    // Use default image from artifact_images folder
+                    String defaultImagePath = "artifact_images/default_pengu.png"; // Adjust the path/filename as needed
+                    imagePathsList = List.of(defaultImagePath);
+                } else {
+                    imagePathsList = List.of(selectedImagePath[0]);
+                }
                 
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText(null);
-                alert.setContentText("Artifact added successfully!");
-                alert.showAndWait();
-                artifactStage.close();
-            } else {
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Please fill in all fields.");
-                alert.showAndWait();
-            }
+                if(txtid.equals("Null")){
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please fill in artifact ID.");
+                    alert.showAndWait();
+                }
+                else{
+                    Artifact artifact = new Artifact(txtid, txtname, txtctg, txtciv, txtdiscloc, txtcomp, txtdate, txtcurrpl, txtweight,
+                                                        txtwidth, txtheight, txtlenght, taglist, imagePathsList);
+
+                    artifactList.add(artifact);
+                    ArtifactManager.addArtifact(artifact);
+                    
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Success");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Artifact added successfully!");
+                    alert.showAndWait();
+                    artifactStage.close();
+                }
             });
             
             artifactLayout.getChildren().addAll(
@@ -293,7 +343,7 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
                 height, length, tags, chooseImages, imagePreview, saveButton
             );
             
-            Scene artifactScene = new Scene(artifactLayout, 300, 600);
+            Scene artifactScene = new Scene(scrollPane, 300, 600);
             artifactStage.setScene(artifactScene);
             artifactStage.initModality(Modality.APPLICATION_MODAL);
             artifactStage.showAndWait();
@@ -379,7 +429,7 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("No Selection");
                 alert.setHeaderText(null);
-                alert.setContentText("Please select an artifact to delete.");
+                alert.setContentText("Select an artifact to delete.");
                 alert.showAndWait();
                 return;
             }
@@ -540,9 +590,6 @@ private static final StringConverter<LocalDate> DATE_CONVERTER = new StringConve
         table.setStyle("-fx-font-size: 20px;");
 
     }
-    
-
-    
 
     private static void aboutText(){
     Stage helpStage = new Stage();
